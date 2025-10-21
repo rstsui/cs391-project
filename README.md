@@ -1,12 +1,12 @@
-# 🍎 Spark!Bytes — BU CS391 Software Engineering Immersion Project
+# Spark!Bytes — BU CS391 Software Engineering Immersion Project
 
-## 📘 Project Overview
+## Project Overview
 **Spark!Bytes** is a web application designed for the Boston University community to reduce food waste from campus events while helping students and staff access free food.  
 Event organizers can post leftover food availability, and users can quickly find opportunities nearby.
 
 This project is developed as part of **CS391 S1: Introduction to Practical Software Development (Fall 2025)** under the BU Spark! Immersion program.
 
-### 🎯 Goals
+### Goals
 - Reduce food waste across BU events and organizations.  
 - Provide a central hub for free food opportunities.  
 - Deliver a secure, scalable, and user-friendly web application.  
@@ -14,7 +14,7 @@ This project is developed as part of **CS391 S1: Introduction to Practical Softw
 
 ---
 
-## 🧩 Core Features
+## Core Features
 - **Event Posting & Management** – Authorized users can post details about available food.  
 - **Real-Time Notifications** – Users can be notified when food is available nearby.  
 - **User Management** – Secure login, registration, and role-based access control.  
@@ -23,7 +23,7 @@ This project is developed as part of **CS391 S1: Introduction to Practical Softw
 
 ---
 
-## 🧠 Tech Stack
+## Tech Stack
 | Category | Technology |
 |-----------|-------------|
 | Front-End | React / Next.js, Ant Design |
@@ -35,7 +35,7 @@ This project is developed as part of **CS391 S1: Introduction to Practical Softw
 
 ---
 
-## 👥 Team GuangDong Southern Tigers
+## Team GuangDong Southern Tigers
 | Member | Role | Scrum Rotations |
 |---------|------|----------------|
 | **Aaron Piando** | Back-End Developer | Scrum Master: Sprint 2 & 7 |
@@ -48,7 +48,7 @@ This project is developed as part of **CS391 S1: Introduction to Practical Softw
 
 ---
 
-## 🔁 Agile Development Process
+## Agile Development Process
 We follow an **Agile, sprint-based workflow** emphasizing collaboration, iteration, and reflection.
 
 ### Sprint Cadence
@@ -65,7 +65,7 @@ We follow an **Agile, sprint-based workflow** emphasizing collaboration, iterati
 
 ---
 
-## ⚙️ Project Management & Communication
+## Project Management & Communication
 | Aspect | Approach |
 |--------|-----------|
 | **Primary Communication** | Group text messages |
@@ -75,7 +75,7 @@ We follow an **Agile, sprint-based workflow** emphasizing collaboration, iterati
 
 ---
 
-## ✅ Definition of Done
+## Definition of Done
 A user story is considered complete when:
 1. All acceptance criteria are met.  
 2. Code passes linting and testing.  
@@ -84,7 +84,7 @@ A user story is considered complete when:
 
 ---
 
-## 📅 Key Course Milestones
+## Key Course Milestones
 | Date | Milestone |
 |------|------------|
 | **Sept 9** | Spark!Bytes Project Announced |
@@ -95,7 +95,7 @@ A user story is considered complete when:
 
 ---
 
-## 🧩 Deliverables
+## Deliverables
 - **Operational Web Application**
   - Implements Spark!Bytes requirements and features.  
 - **Agile Project Artifacts**
@@ -107,11 +107,11 @@ A user story is considered complete when:
 
 ---
 
-## 📜 License
+## License
 This project is developed for academic purposes under Boston University’s **CS391 Software Engineering Immersion** course.  
 All rights reserved © 2025 — Team GuangDong Southern Tigers.
 
 ---
 
-## 🧭 Acknowledgements
+## Acknowledgements
 Special thanks to **Prof. Mike Levinger**, **Prof. Uwe Meding**, and **TA Kevin Wrenn** for guidance, mentorship, and support throughout the project.
