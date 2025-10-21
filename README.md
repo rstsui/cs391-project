@@ -4,7 +4,7 @@
 **Spark!Bytes** is a web application designed for the Boston University community to reduce food waste from campus events while helping students and staff access free food.  
 Event organizers can post leftover food availability, and users can quickly find opportunities nearby.
 
-This project is developed as part of **CS391 S1: Introduction to Practical Software Development (Fall 2025)** under the BU Spark! Immersion program.
+This project is developed as part of **CS391 S1: Introduction to Practical Software Development (Fall 2025)** under BU Spark!.
 
 ### Goals
 - Reduce food waste across BU events and organizations.  
