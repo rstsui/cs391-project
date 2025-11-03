@@ -1,0 +1,45 @@
+# --- Python / FastAPI ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+*.log
+
+# Virtual environment
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE & editor folders
+.vscode/
+.idea/
+*.swp
+
+# OS / system files
+.DS_Store
+Thumbs.db
+
+# Test / build artifacts
+.coverage
+htmlcov/
+dist/
+build/
+*.db
+
+# SQLite fallback (if you ever use it locally)
+*.sqlite3
+
+# Mac metadata files
+Icon?
+venv/
