@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from database import SessionLocal
 from models.rsvp import RSVP
 
+
 router = APIRouter(prefix="/rsvp", tags=["RSVP"])
 
 def get_db():
