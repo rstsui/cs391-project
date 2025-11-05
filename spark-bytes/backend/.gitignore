@@ -10,7 +10,7 @@ __pycache__/
 
 # Virtual environment
 venv/
-.env/
+.env
 .venv/
 env/
 ENV/
@@ -43,3 +43,4 @@ build/
 # Mac metadata files
 Icon?
 venv/
+./backend/.env
