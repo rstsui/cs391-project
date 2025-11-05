@@ -18,7 +18,14 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="SparkBytes API")
 
 # allow frontend origin 
-ALLOWED_ORIGINS = os.getenv("ALLOW_ORIGINS", "http://localhost:3000").split(",")
+ALLOWED_ORIGINS = os.getenv("ALLOW_ORIGINS", "").split(",")
+if not ALLOWED_ORIGINS or ALLOWED_ORIGINS == [""]:
+    ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ]
 
 app.add_middleware(
     CORSMiddleware,

@@ -7,7 +7,7 @@ import os
 load_dotenv()  
 
 # local DB connection string
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./app.db")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
     DATABASE_URL,
