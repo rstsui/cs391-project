@@ -12,4 +12,3 @@ def get_events():
         raise HTTPException(status_code=response.status_code, detail="Supabase request failed")
 
     return response.data
-
