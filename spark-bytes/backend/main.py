@@ -1,11 +1,13 @@
-# backend/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import events, rsvp  # filenames: routes/events.py and routes/rsvp.py
 
-app = FastAPI(title="SparkBytes API", version="0.1.0")
+# import routes
+from routes import events, rsvp, auth  # <-- add auth here
 
-# CORS
+# initialize app
+app = FastAPI(title="SparkBytes API", version="0.2.0")
+
+# configure CORS (frontend on localhost:3000)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -14,10 +16,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# register routers with prefixes & tags 
+# register all routers
+app.include_router(auth.router,  prefix="/auth",  tags=["auth"])    # ⬅️ new
 app.include_router(events.router, prefix="/events", tags=["events"])
-app.include_router(rsvp.router,   prefix="/rsvps", tags=["rsvps"])
+app.include_router(rsvp.router,   prefix="/rsvps",  tags=["rsvps"])
 
+# root route
 @app.get("/")
 def root():
     return {"message": "Welcome to SparkBytes API"}
