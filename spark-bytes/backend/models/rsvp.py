@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from database import Base
+from pydantic import BaseModel, EmailStr, Field
 
-class RSVP(Base):
-    __tablename__ = "rsvps"
+class RSVPCreate(BaseModel):
+    name: str
+    email: EmailStr
+    food_item: str | None = None
+    quantity: int = Field(..., ge=1)
 
-    id = Column(Integer, primary_key=True, index=True)
-    event_id = Column(Integer, ForeignKey("events.id"))
-    name = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-    food_item = Column(String, nullable=False)
-    quantity = Column(Integer, nullable=False)
+class RSVPOut(RSVPCreate):
+    id: int
+    event_id: int
