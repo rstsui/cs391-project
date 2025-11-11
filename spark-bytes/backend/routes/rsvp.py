@@ -1,27 +1,15 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from database import SessionLocal
-from models.rsvp import RSVP
+from fastapi import APIRouter, HTTPException
+from supabase_client import supabase
+from models.rsvp import RSVPCreate
 
-router = APIRouter(prefix="/rsvp", tags=["RSVP"])
+router = APIRouter()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.post("/{event_id}")
-def create_rsvp(event_id: int, rsvp: dict, db: Session = Depends(get_db)):
-    new_rsvp = RSVP(
-        event_id=event_id,
-        name=rsvp.get("name"),
-        email=rsvp.get("email"),
-        food_item=rsvp.get("food_item"),
-        quantity=rsvp.get("quantity"),
-    )
-    db.add(new_rsvp)
-    db.commit()
-    db.refresh(new_rsvp)
-    return {"success": True, "message": "Reservation created!", "rsvp": new_rsvp}
+@router.post("/{event_id}", status_code=201, summary="Create Rsvp")
+def create_rsvp(event_id: int, payload: RSVPCreate):
+    res = supabase.table("rsvps").insert({
+        "event_id": event_id,
+        **payload.model_dump(),
+    }).execute()
+    if not res.data:
+        raise HTTPException(status_code=500, detail="Failed to create RSVP.")
+    return res.data[0]
