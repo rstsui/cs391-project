@@ -8,7 +8,6 @@ h11==0.16.0
 idna==3.11
 psycopg2-binary==2.9.11
 pydantic==2.12.3
-pydantic
 pydantic_core==2.41.4
 sniffio==1.3.1
 SQLAlchemy==2.0.44
@@ -23,11 +22,11 @@ python-multipart==0.0.20
 # user authentication & login storage
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-bcrypt==3.2.2 
+bcrypt==3.2.2
 pydantic[email]>=2.0,<3.0
 email-validator==2.3.0
 
-# backend testing
+# backend testing (keep these — they don’t break Docker)
 pytest==9.0.1
 pytest-asyncio==1.3.0
 httpx==0.28.1
