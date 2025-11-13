@@ -11,7 +11,7 @@ class UserCreate(BaseModel):
 
 class UserInsert(BaseModel):
     email: EmailStr
-    hashed_password: str  # ✅ must match DB column name
+    hashed_password: str  
     role: Optional[str] = "student"
 
 class UserOut(BaseModel):

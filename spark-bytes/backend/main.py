@@ -16,7 +16,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# clean router includes
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(events.router, prefix="/events", tags=["events"])
 app.include_router(rsvp.router, prefix="/rsvps", tags=["rsvps"])

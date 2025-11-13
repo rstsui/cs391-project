@@ -1,4 +1,3 @@
-# backend/routes/auth.py
 
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -9,10 +8,8 @@ from supabase_client import supabase
 from models.user import UserCreate, UserInsert, UserOut
 import os
 
-# --- Router setup ---
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-# --- Environment + security config ---
 SECRET_KEY = os.getenv("JWT_SECRET")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
@@ -20,7 +17,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-# --- Helper functions ---
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Compare plain text password to hashed password."""
     return pwd_context.verify(plain_password, hashed_password)
@@ -36,7 +32,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-# --- Routes ---
 @router.post("/register", status_code=201)
 def register_user(payload: UserCreate):
     """Register a new user in Supabase."""
