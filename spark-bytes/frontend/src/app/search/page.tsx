@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function SePage() {
+export default function SearchPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
