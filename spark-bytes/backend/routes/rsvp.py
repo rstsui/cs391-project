@@ -1,15 +1,19 @@
+# backend/routes/rsvp.py
 from fastapi import APIRouter, HTTPException
 from supabase_client import supabase
-from models.rsvp import RSVPCreate
+from models.rsvp import RSVPCreate, RSVPOut
 
-router = APIRouter()
+router = APIRouter(tags=["RSVP"])  # ✅ no prefix here
 
-@router.post("/{event_id}", status_code=201, summary="Create Rsvp")
+@router.post("/{event_id}", response_model=RSVPOut, status_code=201)
 def create_rsvp(event_id: int, payload: RSVPCreate):
-    res = supabase.table("rsvps").insert({
-        "event_id": event_id,
-        **payload.model_dump(),
-    }).execute()
+    """Create an RSVP for a specific event in Supabase."""
+    data = payload.model_dump()
+    data["event_id"] = event_id
+
+    res = supabase.table("rsvps").insert(data).execute()
+
     if not res.data:
-        raise HTTPException(status_code=500, detail="Failed to create RSVP.")
+        raise HTTPException(status_code=500, detail="Failed to create RSVP")
+
     return res.data[0]
