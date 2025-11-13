@@ -11,7 +11,7 @@ class RSVPCreate(BaseModel):
 class RSVPOut(RSVPCreate):
     id: int
     event_id: int
-    created_at: datetime  # ✅ helps show when RSVP was made
+    created_at: datetime  
 
     class Config:
-        orm_mode = True  # ✅ allows ORM/DB responses to convert cleanly
+        orm_mode = True  
