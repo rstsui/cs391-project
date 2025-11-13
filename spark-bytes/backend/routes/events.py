@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from supabase_client import supabase
-from models.event import EventCreate, EventOut  # include EventOut for responses
+from models.event import EventCreate, EventOut  
 import json
 
 router = APIRouter()

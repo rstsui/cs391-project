@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from supabase_client import supabase
 from models.rsvp import RSVPCreate, RSVPOut
 
-router = APIRouter(tags=["RSVP"])  # ✅ no prefix here
+router = APIRouter(tags=["RSVP"])  
 
 @router.post("/{event_id}", response_model=RSVPOut, status_code=201)
 def create_rsvp(event_id: int, payload: RSVPCreate):
