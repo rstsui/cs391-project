@@ -25,7 +25,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
-    {/* Center Container */}
     <div className="flex-grow flex items-center justify-center px-4">
       <div className="bg-white/80 backdrop-blur-xl p-10 rounded-2xl shadow-xl w-[90%] max-w-md border border-gray-200">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
