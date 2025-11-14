@@ -12,10 +12,15 @@ export default function SignupPage() {
   const [confirm, setConfirm] = useState("");
 
   const handleSignup = async () => {
+    if (!email.toLowerCase().endsWith("@bu.edu")) {
+      alert("Please enter your BU email.");
+      return;
+    }
     if (password !== confirm) {
       alert("Passwords do not match");
       return;
     }
+
 
     const { error } = await supabase.auth.signUp({
       email,

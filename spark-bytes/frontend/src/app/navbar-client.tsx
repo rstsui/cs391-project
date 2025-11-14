@@ -1,5 +1,5 @@
 "use client";
-
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSupabaseSession } from "@/lib/useSupabaseSession";
 import { supabase } from "@/lib/supabaseClient"
@@ -9,11 +9,14 @@ import { useRouter } from "next/navigation";
 export default function NavbarClient() {
   const session = useSupabaseSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const isActive = (path: string) =>
+    pathname === path ? "underline font-semibold" : "hover:underline";
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(() => {
-      router.refresh(); // force UI update
+      router.refresh();
     });
 
     return () => subscription.unsubscribe();
@@ -22,17 +25,42 @@ export default function NavbarClient() {
   return (
     <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
       <span className="font-semibold text-lg">Spark!Bytes</span>
-      <div className="flex gap-6 items-center">
-        <Link href="/">Home</Link>
-        <Link href="/search">Events</Link>
-        <Link href="/events/create">Create Event</Link>
 
+      <div className="flex gap-6 items-center">
+        <Link href="/" className={isActive("/")}>
+          Home
+        </Link>
+
+        <Link href="/search" className={isActive("/search")}>
+          Events
+        </Link>
+
+        {/* If logged in */}
+        {session && (
+          <>
+            <Link
+              href="/events/create"
+              className={isActive("/events/create")}
+            >
+              Create Event
+            </Link>
+
+            <Link
+              href="/profile_reserve"
+              className={isActive("/profile_reserve")}
+            >
+              My Events
+            </Link>
+          </>
+        )}
+
+        {/* Auth link */}
         {session ? (
-          <Link href="/log_out" className="underline">
+          <Link href="/log_out" className={isActive("/log_out")}>
             Logout
           </Link>
         ) : (
-          <Link href="/login" className="underline">
+          <Link href="/login" className={isActive("/login")}>
             Login
           </Link>
         )}
