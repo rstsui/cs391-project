@@ -1,22 +1,14 @@
+"use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function CreateEvent() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
-        <Image src="/next.svg" alt="Spark!Bytes logo" width={100} height={100} />
-        <ul className="flex space-x-6 text-lg">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/events">Events</Link></li>
-          <li><Link href="/create-event">Create Event</Link></li>
-          <li><Link href="/login">Login</Link></li>
-        </ul>
-      </nav>
+<div className="min-h-screen flex flex-col bg-gradient-to-b from-teal-100 via-white to-teal-50">
+  <section className="flex flex-col items-center justify-center flex-grow px-4">
 
       {/* Form Section */}
-      <section className="flex flex-col items-center justify-center flex-grow bg-gray-50 px-4">
         <div className="bg-white rounded-2xl shadow-md p-8 w-full max-w-lg">
           <h2 className="text-2xl font-semibold text-center mb-6">Create an Event</h2>
 

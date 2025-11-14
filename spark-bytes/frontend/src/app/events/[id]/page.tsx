@@ -1,15 +1,6 @@
 export default function EventInfoPage({ params }: { params: { id: string } }) {
     return (
       <div className="min-h-screen flex flex-col bg-gray-50">
-        <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
-          <h1 className="text-xl font-bold">Spark!Bytes</h1>
-          <ul className="flex space-x-6">
-            <li>Home</li>
-            <li>Events</li>
-            <li>Create Event</li>
-            <li>Login</li>
-          </ul>
-        </nav>
         <main className="flex justify-center py-16 px-4">
           <div className="flex flex-col md:flex-row gap-10 w-full max-w-6xl">
             
