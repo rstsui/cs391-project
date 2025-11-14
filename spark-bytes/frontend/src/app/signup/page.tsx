@@ -32,17 +32,6 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* NAVBAR */}
-      <nav className="bg-black text-white flex justify-between px-8 py-4">
-        <span className="font-semibold">Spark!Bytes</span>
-
-        <div className="flex gap-6">
-          <Link href="/">Home</Link>
-          <Link href="/events">Events</Link>
-          <Link href="/events/create">Create Event</Link>
-          <Link href="/login">Login</Link>
-        </div>
-      </nav>
 
       {/* SIGNUP BOX */}
       <main className="flex flex-col items-center py-16">

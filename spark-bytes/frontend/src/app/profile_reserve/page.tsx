@@ -4,24 +4,6 @@ import Link from "next/link";
 export default function ProfileReserve() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
-        <Image src="/next.svg" alt="Spark!Bytes logo" width={100} height={100} />
-        <ul className="flex space-x-6 text-lg">
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/events">Events</Link>
-          </li>
-          <li>
-            <Link href="/create-event">Create Event</Link>
-          </li>
-          <li>
-            <Link href="/login">Login</Link>
-          </li>
-        </ul>
-      </nav>
 
       {/* Logged Out Confirmation Section */}
         <section className="flex flex-wrap justify-center gap-6 px-8 pb-12 mt-20">

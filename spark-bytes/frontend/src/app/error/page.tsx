@@ -5,17 +5,6 @@ import Link from "next/link";
 export default function ErrorPage() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* NAVBAR */}
-      <nav className="bg-black text-white flex justify-between px-8 py-4">
-        <span className="font-semibold">Spark!Bytes</span>
-
-        <div className="flex gap-6">
-          <Link href="/">Home</Link>
-          <Link href="/events">Events</Link>
-          <Link href="/events/create">Create Event</Link>
-          <Link href="/login">Login</Link>
-        </div>
-      </nav>
 
       {/* ERROR BOX */}
       <main className="flex flex-col items-center justify-center flex-grow px-4 text-center">
