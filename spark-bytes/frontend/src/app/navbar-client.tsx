@@ -39,8 +39,8 @@ export default function NavbarClient() {
         {session && (
           <>
             <Link
-              href="/events/create"
-              className={isActive("/events/create")}
+              href="/create_event"
+              className={isActive("/events/create_event")}
             >
               Create Event
             </Link>
@@ -53,6 +53,15 @@ export default function NavbarClient() {
             </Link>
           </>
         )}
+        {session && (
+        <Link
+            href="/profile_page"
+            className={pathname === "/profile_page" ? "underline font-semibold" : ""}
+        >
+            Profile
+        </Link>
+        )}
+
 
         {/* Auth link */}
         {session ? (

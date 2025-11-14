@@ -18,7 +18,7 @@ export default function LoggedOutPage() {
     logout();
   }, [router]);
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
       {/* Logged Out Confirmation */}
       <section className="flex flex-col items-center justify-center mt-20">
         <h1 className="text-2xl font-semibold mb-6">
