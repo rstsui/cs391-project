@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function SePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
 
 
       {/* Search Section */}
