@@ -1,12 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function SePage() {
+export default function SearchPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
-
-
-      {/* Search Section */}
       <section className="flex flex-col items-center justify-center flex-grow">
         {/* Title */}
         <h1 className="text-3xl font-semibold mb-6 text-center">

@@ -39,22 +39,20 @@ export default function HomePage() {
 
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 px-10 lg:px-24 py-10">
         {[
-          { title: "Find Events", text: "See what’s happening across BU", icon: "🗺️" },
-          { title: "Reduce Waste", text: "Reserve leftover event food", icon: "🍽️" },
-          { title: "Connect", text: "Meet new people on campus", icon: "🤝" },
+          { title: "1. Find Events", text: "See what’s happening across BU" },
+          { title: "2. Reduce Waste", text: "Reserve leftover event food" },
+          { title: "3. Connect", text: "Meet new people on campus" },
         ].map((card) => (
           <div
             key={card.title}
             className="bg-white/60 backdrop-blur-xl border border-gray-200 shadow-xl p-8 rounded-3xl hover:shadow-2xl hover:-translate-y-2 transition cursor-pointer"
           >
-            <div className="text-5xl mb-4">{card.icon}</div>
             <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
             <p className="text-gray-700">{card.text}</p>
           </div>
         ))}
       </section>
 
-      {/* IMAGE GALLERY */}
       <section className="px-10 lg:px-24 py-12">
         <h2 className="text-3xl font-bold mb-6 text-center">Food Moments at BU</h2>
 
@@ -70,7 +68,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CALL TO ACTION */}
       <section className="bg-teal-600 text-white text-center py-16 px-6 mt-10">
         <h2 className="text-3xl font-semibold mb-4">Make BU More Sustainable</h2>
         <p className="text-lg opacity-90 mb-6 max-w-xl mx-auto">
