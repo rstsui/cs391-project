@@ -25,21 +25,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* NAVBAR */}
-      <nav className="bg-black text-white flex justify-between px-8 py-4">
-        <span className="font-semibold">Spark!Bytes</span>
 
-        <div className="flex gap-6">
-          <Link href="/">Home</Link>
-          <Link href="/events">Events</Link>
-          <Link href="/events/create">Create Event</Link>
-          <Link href="/login" className="font-bold underline">
-            Login
-          </Link>
-        </div>
-      </nav>
 
-      {/* LOGIN BOX */}
       <main className="flex flex-col items-center py-16">
         <div className="bg-gray-200 p-10 rounded-xl w-[350px] shadow">
           <h2 className="text-xl font-bold mb-6">Login</h2>

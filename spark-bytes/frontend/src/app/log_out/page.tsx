@@ -1,29 +1,25 @@
+
+
+"use client";
+
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoggedOutPage() {
+  const router = useRouter();
+  useEffect(() => {
+    async function logout() {
+      await supabase.auth.signOut();
+      router.refresh();
+    }
+    logout();
+  }, [router]);
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
-        <Image src="/next.svg" alt="Spark!Bytes logo" width={100} height={100} />
-        <ul className="flex space-x-6 text-lg">
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/events">Events</Link>
-          </li>
-          <li>
-            <Link href="/create-event">Create Event</Link>
-          </li>
-          <li>
-            <Link href="/login">Login</Link>
-          </li>
-        </ul>
-      </nav>
-
-      {/* Logged Out Confirmation Section */}
+      {/* Logged Out Confirmation */}
       <section className="flex flex-col items-center justify-center mt-20">
         <h1 className="text-2xl font-semibold mb-6">
           You have successfully logged out.
