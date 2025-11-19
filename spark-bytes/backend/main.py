@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # import routes
-from routes import events, rsvp, auth  # <-- add auth here
+from routes import events, rsvp, auth
 
 # initialize app
 app = FastAPI(title="SparkBytes API", version="0.2.0")
