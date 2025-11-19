@@ -13,10 +13,6 @@ These features are already implemented or partially implemented in the backend/f
 - User login with JWT token issuance
 - Access control for protected routes
 
-#### Role-Based Permissions
-- Role field on user (e.g., student, organizer)
-- Permission logic for protected endpoints (e.g., event creation)
-
 #### Event Management
 - Create event (organizer only)
 - View list of events
@@ -39,6 +35,9 @@ These features are not yet implemented or are too complex for current sprint tes
 - Accessibility / WCAG full audit
 - Performance/stress testing
 - Automated Google Maps integration testing
+- Role field on user (e.g., student, organizer)
+- Permission logic for protected endpoints (e.g., event creation)
+
 
 These will be included in later test cycles.
 
