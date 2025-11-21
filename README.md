@@ -5,7 +5,7 @@ Follow these steps if you have just cloned the repository and want to launch the
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 spark-bytes/
   ├── backend/
