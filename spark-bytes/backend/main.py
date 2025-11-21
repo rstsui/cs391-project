@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # import routes
-from routes import events, rsvp, auth  # <-- add auth here
+from routes import events, rsvp, auth
 
 # initialize app
 app = FastAPI(title="SparkBytes API", version="0.2.0")
@@ -17,9 +17,9 @@ app.add_middleware(
 )
 
 # register all routers
-app.include_router(auth.router,  prefix="/auth",  tags=["auth"])    # ⬅️ new
+app.include_router(auth.router) 
 app.include_router(events.router, prefix="/events", tags=["events"])
-app.include_router(rsvp.router,   prefix="/rsvps",  tags=["rsvps"])
+app.include_router(rsvp.router, prefix="/rsvp", tags=["rsvp"])
 
 # root route
 @app.get("/")
