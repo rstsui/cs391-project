@@ -6,6 +6,16 @@ Event organizers can post leftover food availability, and users can quickly find
 
 This project is developed as part of **CS391 S1: Introduction to Practical Software Development (Fall 2025)** under BU Spark!.
 
+### Frontend
+- Built with **Next.js** and **React**.
+- **Responsive Design**: Optimized for desktop and mobile devices.
+- **Authentication**: Users can log in and sign up using their BU email.
+- **Event Browsing**: Users can search, filter, and view event details.
+- **Food Reservation**: Students can reserve food from events.
+- **Profile Management**: Users can view and manage their profiles and reservations.
+
+### Backend 
+
 ### Goals
 - Reduce food waste across BU events and organizations.  
 - Provide a central hub for free food opportunities.  
