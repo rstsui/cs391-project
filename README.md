@@ -5,18 +5,21 @@ Follow these steps if you have just cloned the repository and want to launch the
 
 ---
 
-## Project Structure
-```
-spark-bytes/
-  ├── backend/
-  │     ├── main.py
-  │     ├── routes/
-  │     ├── models/
-  │     └── tests/
-  └── frontend/
-        ├── package.json
-        └── src/
-```
+### Frontend
+- Built with **Next.js** and **React**.
+- **Responsive Design**: Optimized for desktop and mobile devices.
+- **Authentication**: Users can log in and sign up using their BU email.
+- **Event Browsing**: Users can search, filter, and view event details.
+- **Food Reservation**: Students can reserve food from events.
+- **Profile Management**: Users can view and manage their profiles and reservations.
+
+### Backend 
+
+### Goals
+- Reduce food waste across BU events and organizations.  
+- Provide a central hub for free food opportunities.  
+- Deliver a secure, scalable, and user-friendly web application.  
+- Practice Agile methodologies and collaborative software engineering in a real-world context.
 
 ---
 

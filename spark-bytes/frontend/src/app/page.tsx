@@ -57,7 +57,7 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold mb-6 text-center">Food Moments at BU</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {["gallery1.jpg", "gallery2.jpg", "gallery3.jpg"].map((img) => (
+          {["gallery1.jpg", "gallery4.jpg", "gallery3.jpg"].map((img) => (
             <div
               key={img}
               className="relative h-52 rounded-2xl overflow-hidden shadow-lg hover:scale-[1.03] transition duration-300"
