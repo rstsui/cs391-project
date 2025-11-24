@@ -1,7 +1,30 @@
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function ProfileReserve() {
+  const router = useRouter();
+  useEffect(() => {
+    const checkEmail = async () => {
+      const { data } = await supabase.auth.getUser();
+      const user = data?.user;
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      if (user.email && !user.email.endsWith("@bu.edu")) {
+        await supabase.auth.signOut();
+        alert("You must use your BU email to log in.");
+        router.push("/login");
+      }
+    };
+    checkEmail();
+  }, [router]);
+
   return (
   <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100">
     <main className="flex-1 px-10 py-16 max-w-6xl mx-auto w-full">
