@@ -1,10 +1,9 @@
-# Spark!Bytes — BU CS391 Software Engineering Immersion Project
+# Spark!Bytes: Setup Guide
 
-## Project Overview
-**Spark!Bytes** is a web application designed for the Boston University community to reduce food waste from campus events while helping students and staff access free food.  
-Event organizers can post leftover food availability, and users can quickly find opportunities nearby.
+This guide explains how to install and run Spark!Bytes locally.  
+Follow these steps if you have just cloned the repository and want to launch the backend API, run the frontend interface, or execute the test suite.
 
-This project is developed as part of **CS391 S1: Introduction to Practical Software Development (Fall 2025)** under BU Spark!.
+---
 
 ### Frontend
 - Built with **Next.js** and **React**.
@@ -24,104 +23,150 @@ This project is developed as part of **CS391 S1: Introduction to Practical Softw
 
 ---
 
-## Core Features
-- **Event Posting & Management** – Authorized users can post details about available food.  
-- **Real-Time Notifications** – Users can be notified when food is available nearby.  
-- **User Management** – Secure login, registration, and role-based access control.  
-- **Food Availability Dashboard** – Browse active listings by time, location, or type.  
-- **Administrative Tools** – View usage statistics, manage events, and handle reports.
+# 1. Backend Setup (FastAPI + Supabase)
+
+### Step 1 — Navigate into the backend directory
+```bash
+cd spark-bytes/backend
+```
+
+### Step 2 — Create & activate a virtual environment
+```bash
+python -m venv venv
+```
+
+**Windows:**
+```bash
+venv\Scripts\activate
+```
+
+**macOS/Linux:**
+```bash
+source venv/bin/activate
+```
+
+### Step 3 — Install backend dependencies
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## Tech Stack
-| Category | Technology |
-|-----------|-------------|
-| Front-End | React / Next.js, Ant Design |
-| Back-End | Node.js / Express (alternatively Django or Flask, depending on team’s final stack) |
-| Database | MongoDB / PostgreSQL |
-| Project Management | Notion (Agile sprints, backlog tracking, retrospectives) |
-| Version Control | GitHub |
-| Hosting (Planned) | Render / Vercel / AWS |
+## 2. Environment Variables (.env.local)
+
+Inside `spark-bytes/backend/`, create a file named:
+
+```
+.env.local
+```
+
+Add the following variables (will be updated with keys):
+
+```
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_service_role_key_or_anon_key
+JWT_SECRET=your_jwt_secret_key
+```
+
+> NOTE: The backend will not run without these variables.
 
 ---
 
-## Team GuangDong Southern Tigers
-| Member | Role | Scrum Rotations |
-|---------|------|----------------|
-| **Aaron Piando** | Back-End Developer | Scrum Master: Sprint 2 & 7 |
-| **Karachi Onwuanibe** | Front-End Developer | Scrum Master: Sprint 1 & 6 |
-| **Solianne Rubattino** | Back-End Developer | Scrum Master: Sprint 3 & 8 |
-| **Kunchok Takrong** | Back-End Developer | Scrum Master: Sprint 4 |
-| **Renee Tsui** | Front-End Developer | Scrum Master: Sprint 5 |
+# 3. Running the Backend Server
 
-**Product Owners:** Prof. Mike Levinger & Prof. Uwe Meding
+With the virtual environment active:
 
----
+```bash
+uvicorn main:app --reload
+```
 
-## Agile Development Process
-We follow an **Agile, sprint-based workflow** emphasizing collaboration, iteration, and reflection.
+API will run at:
 
-### Sprint Cadence
-- **Length:** 1 week  
-- **Planning / Review / Demo:** Weekly, in-person at CDS (5:30–6:00 PM)  
-- **Standups:** Twice per week via group chat  
-- **Backlog Refinement:** Ongoing, minimum once per sprint  
+```
+http://localhost:8000
+```
 
-### Tools & Practices
-- **Backlog & User Stories:** Managed in Notion with acceptance criteria.  
-- **Definition of Done (DoD):** A story is complete when all associated tasks are done and approved by all team members.  
-- **Retrospectives:** Identify at least 3 actionable improvements per sprint.  
-- **Psychological Safety:** Encouraged through open communication and respect.  
+Swagger UI:
+
+```
+http://localhost:8000/docs
+```
 
 ---
 
-## Project Management & Communication
-| Aspect | Approach |
-|--------|-----------|
-| **Primary Communication** | Group text messages |
-| **Response Time Expectation** | Within 2 hours |
-| **Meetings** | Weekly in-person; two asynchronous text updates per week |
-| **Conflict Resolution** | Discuss as a team → escalate to current Scrum Master → escalate to instructors if needed |
+# 4. Running Backend Tests (pytest)
+
+From inside the backend folder:
+
+```bash
+pytest
+```
+
+This runs all backend test cases, including:
+- Authentication tests  
+- Events tests  
+- RSVP tests  
+- Smoke test  
+- FakeSupabase-backed integration tests  
 
 ---
 
-## Definition of Done
-A user story is considered complete when:
-1. All acceptance criteria are met.  
-2. Code passes linting and testing.  
-3. Peer review and approval from all team members.  
-4. Changes merged into the main branch.  
+# 5. Frontend Setup (Next.js or React)
+
+### Step 1 — Navigate to the frontend directory
+```bash
+cd ../frontend
+```
+
+### Step 2 — Install dependencies
+```bash
+npm install
+```
+
+### Step 3 — Create `.env.local`
+Inside `spark-bytes/frontend/`, create:
+
+```
+.env.local
+```
+
+Add environment variables:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_KEY=your_anon_key
+```
 
 ---
 
-## Key Course Milestones
-| Date | Milestone |
-|------|------------|
-| **Sept 9** | Spark!Bytes Project Announced |
-| **Oct 10** | Teams Assigned + Contract Finalized |
-| **Nov 11–13** | Mid-Project Retrospective & Planning |
-| **Dec 9** | Final Project and Presentation Due |
-| **Dec 15–19** | Final Presentations During Exam Week |
+# 6. Running the Frontend
+
+```bash
+npm run dev
+```
+
+Default URL:
+
+```
+http://localhost:3000
+```
 
 ---
 
-## Deliverables
-- **Operational Web Application**
-  - Implements Spark!Bytes requirements and features.  
-- **Agile Project Artifacts**
-  - User stories, backlog, sprints, retrospectives (Notion).  
-- **Final Team Presentation**
-  - Live demo of the deployed application.  
-  - Discussion of architecture, stack, and security approach.  
-  - Review of Agile methodology and team process.
+# 7. Common Issues
+
+### CORS Errors
+Make sure the backend allows requests from the frontend:
+
+```python
+allow_origins=["http://localhost:3000"]
+```
+
+### Supabase connection errors
+Verify `.env.local` values.
+
+### JWT Errors
+Ensure `JWT_SECRET` is set correctly.
 
 ---
-
-## License
-This project is developed for academic purposes under Boston University’s **CS391 Software Engineering Immersion** course.  
-All rights reserved © 2025 — Team GuangDong Southern Tigers.
-
----
-
-## Acknowledgements
-Special thanks to **Prof. Mike Levinger**, **Prof. Uwe Meding**, and **TA Kevin Wrenn** for guidance, mentorship, and support throughout the project.
