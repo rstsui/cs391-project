@@ -129,16 +129,7 @@ These will be included in later test cycles.
 3. Invalid RSVP quantity → **400**
 
 
-## 8. Test Execution Plan
-
-| Task | Assigned To | Due |
-|------|--------------|------|
-| Write backend unit tests | Aaron | Nov 19 |
-| Write integration tests | Aaron | Nov 19 |
-| Regression testing after merges | Everyone | Ongoing |
-
-
-## 9. Risks & Mitigations
+## 8. Risks & Mitigations
 
 | Risk | Impact | Mitigation |
 |--------|---------|--------------|
@@ -148,11 +139,10 @@ These will be included in later test cycles.
 | Environment differences | Medium | Share `.env.example` file |
 
 
-## 10. Approval
+## 9. Approval
 
 Team members sign off that the scope and test cases are accurate.
 
 - **Aaron** – Backend Developer (and Testing Developer)
 - **Kunchok** – Backend Developer 
 - **Solianne** – Backend Developer
-- **Uwe, Michael, or Kevin** – Course Staff (if necessary)
