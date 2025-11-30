@@ -154,5 +154,5 @@ Team members sign off that the scope and test cases are accurate.
 
 - **Aaron** – Backend Developer (and Testing Developer)
 - **Kunchok** – Backend Developer 
-- **Karachi** – Backend Developer
+- **Solianne** – Backend Developer
 - **Uwe, Michael, or Kevin** – Course Staff (if necessary)
