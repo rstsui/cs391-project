@@ -3,19 +3,7 @@ import Link from 'next/link';
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
-        <Image src="/next.svg" alt="Spark!Bytes logo" width={100} height={100} />
-        <ul className="flex space-x-6 text-lg">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/events">Events</Link></li>
-          <li><Link href="/create-event">Create Event</Link></li>
-          <li><Link href="/login">Login</Link></li>
-        </ul>
-      </nav>
-
-      {/* Search Section */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
       <section className="flex flex-col items-center justify-center flex-grow">
         {/* Title */}
         <h1 className="text-3xl font-semibold mb-6 text-center">

@@ -3,29 +3,8 @@ import Link from "next/link";
 
 export default function ProfilePage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-black text-white flex justify-between items-center px-8 py-4">
-        <Image src="/next.svg" alt="Spark!Bytes logo" width={100} height={100} />
-        <ul className="flex space-x-6 text-lg">
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/events">Events</Link>
-          </li>
-          <li>
-            <Link href="/create-event">Create Event</Link>
-          </li>
-          <li>
-            <Link href="/login">Login</Link>
-          </li>
-        </ul>
-      </nav>
-
-      {/* Profile Section */}
-        <section className="flex flex-col items-center mt-16">
-        {/* Profile Picture */}
+<div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100">
+<section className="flex flex-col items-center mt-16">
         <div className="w-32 h-32 rounded-full bg-gray-300 overflow-hidden">
             <Image
             src="/profile.jpg" // Replace with actual profile image path
