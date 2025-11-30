@@ -3,13 +3,29 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSupabaseSession } from "@/lib/useSupabaseSession";
 import { supabase } from "@/lib/supabaseClient"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function NavbarClient() {
   const session = useSupabaseSession();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [role, setRole] = useState<string | null>(null);
+  useEffect(() => {
+    async function loadRole() {
+      if (!session) return;
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .single();
+
+      setRole(data?.role ?? null);
+    }
+    loadRole();
+  }, [session]);
   const isActive = (path: string) =>
     pathname === path ? "underline font-semibold" : "hover:underline";
   useEffect(() => {
@@ -39,11 +55,12 @@ export default function NavbarClient() {
         {session && (
           <>
             <Link
-              href="/create_event"
-              className={isActive("/events/create_event")}
+              href={role === "admin" ? "/create_event" : "/request_access"}
+              className={isActive(role === "admin" ? "/create_event" : "/request_access")}
             >
               Create Event
             </Link>
+
 
             <Link
               href="/profile_reserve"
@@ -61,7 +78,15 @@ export default function NavbarClient() {
             Profile
         </Link>
         )}
-
+        {/* Admin-only: View pending access requests */}
+        {session && role === "admin" && (
+          <Link
+            href="/admin/requests"
+            className={isActive("/admin/requests")}
+          >
+            Admin Requests
+          </Link>
+        )}
 
         {/* Auth link */}
         {session ? (
