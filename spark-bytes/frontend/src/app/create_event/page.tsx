@@ -1,56 +1,92 @@
 "use client";
 
-import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function CreateEvent() {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
+
   const [eventName, setEventName] = useState("");
   const [email, setEmail] = useState("");
-  const [food, setFood] = useState("");
+  const [foodItem, setFoodItem] = useState("");
   const [quantity, setQuantity] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
+  useEffect(() => {
+    async function checkRole() {
+      const { data: { user } } = await supabase.auth.getUser();
 
-    const { data, error } = await supabase.from("events").insert([
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.role !== "admin") {
+        router.push("/request_access");
+        return;
+      }
+
+      setAuthorized(true);
+    }
+    checkRole();
+  }, [router]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { error } = await supabase.from("events").insert([
       {
         name: eventName,
-        email: email,
-        food_item: food,
+        email,
+        food_item: foodItem,
         quantity: Number(quantity),
-        location: location,
-        date: new Date(date).toISOString(), 
+        location,
+        date: new Date(date).toISOString(),
         time: date,
       },
     ]);
 
     if (error) {
-      console.error("Error inserting event:", error);
-      alert("Something went wrong!");
-    } else {
-      alert("Event submitted!");
+      alert("Failed to create event.");
+      return;
     }
-  }
+
+    alert("Event created!");
+    router.push("/profile_reserve");
+  };
+
+  if (!authorized) return null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-teal-100 via-white to-teal-50">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+
+
+      {/* FORM SECTION */}
       <section className="flex flex-col items-center justify-center flex-grow px-4">
-
         <div className="bg-white rounded-2xl shadow-md p-8 w-full max-w-lg">
-          <h2 className="text-2xl font-semibold text-center mb-6">Create an Event</h2>
+          <h2 className="text-2xl font-semibold text-center mb-6">
+            Create an Event
+          </h2>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-gray-700 mb-1">Event Name</label>
               <input
                 type="text"
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                placeholder="Enter event name"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
@@ -60,8 +96,7 @@ export default function CreateEvent() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your BU email"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
@@ -69,10 +104,9 @@ export default function CreateEvent() {
               <label className="block text-gray-700 mb-1">Type of Food</label>
               <input
                 type="text"
-                value={food}
-                onChange={(e) => setFood(e.target.value)}
-                placeholder="Enter type of food"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                value={foodItem}
+                onChange={(e) => setFoodItem(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
@@ -82,8 +116,7 @@ export default function CreateEvent() {
                 type="number"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                placeholder="Enter quantity"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
@@ -93,8 +126,7 @@ export default function CreateEvent() {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Enter location"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
@@ -104,20 +136,27 @@ export default function CreateEvent() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700"
+              className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors"
             >
               Submit
             </button>
-
           </form>
         </div>
       </section>
+
+      {/* FOOTER */}
+      <footer className="bg-black text-white text-center text-sm py-6 mt-auto">
+        <p>Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative</p>
+        <p>665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space</p>
+        <p>buspark@bu.edu</p>
+      </footer>
+
     </div>
   );
 }
