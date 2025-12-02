@@ -9,6 +9,7 @@ export default function CreateEvent() {
 
   // Admin authorization state
   const [authorized, setAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Form fields
   const [eventName, setEventName] = useState("");
@@ -19,33 +20,47 @@ export default function CreateEvent() {
   const [date, setDate] = useState("");
 
   // Check admin role
-  useEffect(() => {
-    async function checkRole() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+ useEffect(() => {
+  async function checkAccess() {
+    setLoading(true);
 
-      if (!user) {
-        router.push("/login");
-        return;
-      }
+    const { data: authData } = await supabase.auth.getUser();
+    const user = authData?.user;
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-
-      if (profile?.role !== "admin") {
-        router.push("/request_access");
-        return;
-      }
-
-      setAuthorized(true);
+    if (!user) {
+      router.push("/login");
+      return;
     }
 
-    checkRole();
-  }, [router]);
+    // Load their profile
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    // If profile missing — create one
+    if (!profile) {
+      await supabase.from("profiles").insert([
+        { id: user.id, email: user.email, role: "user" }
+      ]);
+
+      router.push("/request_access");
+      return;
+    }
+
+    // Now check permissions
+    if (profile.role !== "admin") {
+      router.push("/request_access");
+      return;
+    }
+
+    setAuthorized(true);
+    setLoading(false);
+  }
+
+  checkAccess();
+}, []);
 
   // Submit Handler
   const handleSubmit = async (e: any) => {
