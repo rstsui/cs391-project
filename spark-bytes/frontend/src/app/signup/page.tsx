@@ -36,7 +36,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
 
       {/* SIGNUP BOX */}
       <main className="flex flex-col items-center py-16">
