@@ -57,24 +57,23 @@ export default function SearchPage() {
     loadEvents();
   }, []);
 
-  // Filter events on search input
-  useEffect(() => {
-    const q = query.toLowerCase();
 
-    const results = events.filter((event) => {
-      const matchesTitle = event.title?.toLowerCase().includes(q);
-      const matchesLocation = event.location?.toLowerCase().includes(q);
-      const matchesDate = event.event_date?.toLowerCase().includes(q);
+  const handleSearch = async () => {
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .or(`name.ilike.%${query}%,location.ilike.%${query}%,food_item.ilike.%${query}%`)
+    .order("created_at", { ascending: false });
 
-      const matchesFood = event.food_items?.some((item) =>
-        item.name.toLowerCase().includes(q)
-      );
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-      return matchesTitle || matchesLocation || matchesFood || matchesDate;
-    });
+  setFiltered(data || []);
+};
 
-    setFiltered(results);
-  }, [query, events]);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
@@ -94,7 +93,10 @@ export default function SearchPage() {
             onChange={(e) => setQuery(e.target.value)}
             className="flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
           />
-          <button className="bg-teal-600 text-white px-4 py-2 rounded-r-lg hover:bg-teal-700">
+          <button
+            onClick={handleSearch}
+            className="bg-teal-600 text-white px-4 py-2 rounded-r-lg hover:bg-teal-700"
+          >
             Search
           </button>
         </div>
@@ -147,12 +149,10 @@ export default function SearchPage() {
           ))}
         </div>
       </section>
-  
-      {/* Footer */}
+
       <footer className="bg-black text-white text-center text-sm py-6 px-4 mt-auto">
         <p>
-          Boston University Center of Computing & Data Sciences: Duan Family
-          Spark! Initiative
+          Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative
         </p>
         <p>665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space</p>
         <p>buspark@bu.edu</p>
