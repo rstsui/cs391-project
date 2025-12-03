@@ -62,7 +62,7 @@ export default function SearchPage() {
   const { data, error } = await supabase
     .from("events")
     .select("*")
-    .or(`name.ilike.%${query}%,location.ilike.%${query}%,food_item.ilike.%${query}%`)
+    .or(`title.ilike.%${query}%,location.ilike.%${query}%,food_items.ilike.%${query}%`)
     .order("created_at", { ascending: false });
 
   if (error) {
