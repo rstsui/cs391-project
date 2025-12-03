@@ -33,7 +33,7 @@ export default function SearchPage() {
   const { data, error } = await supabase
     .from("events")
     .select("*")
-    .or(`name.ilike.%${query}%,location.ilike.%${query}%,food_item.ilike.%${query}%`)
+    .or(`title.ilike.%${query}%,location.ilike.%${query}%,food_items.ilike.%${query}%`)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -80,11 +80,11 @@ export default function SearchPage() {
 
           {filtered.map((event) => (
             <div key={event.id} className="bg-white shadow-md border border-gray-300 rounded-xl p-5">
-              <h3 className="text-xl font-semibold mb-2">{event.event_name}</h3>
+              <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
               <p className="text-gray-700"><strong>Location:</strong> {event.location}</p>
-              <p className="text-gray-700"><strong>Food:</strong> {event.food_type}</p>
-              <p className="text-gray-700"><strong>Quantity:</strong> {event.quantity}</p>
-              <p className="text-gray-700"><strong>Date:</strong> {event.date}</p>
+              <p className="text-gray-700"><strong>Food:</strong> {event.tag}</p>
+              <p className="text-gray-700"><strong>Quantity:</strong> {event.food_items}</p>
+              <p className="text-gray-700"><strong>Date:</strong> {event.event_date}</p>
             </div>
           ))}
         </div>
