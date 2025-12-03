@@ -170,3 +170,20 @@ Verify `.env.local` values.
 Ensure `JWT_SECRET` is set correctly.
 
 ---
+
+---
+
+# 8. Docker
+
+### Install Docker
+https://www.docker.com/products/docker-desktop/
+
+### Docker Commands
+To build containers: docker compose build
+To start the full stack: docker compose up
+To run in the backend: docker compose down
+To stop: docker compose down
+To check running containers: docker ps
+
+
+---
