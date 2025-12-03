@@ -40,21 +40,29 @@ export default function CreateEvent() {
   useEffect(() => {
     async function checkAccess() {
       setLoading(true);
-
+  
       const { data: authData } = await supabase.auth.getUser();
       const user = authData?.user;
-
+  
       if (!user) {
         router.push("/login");
         return;
       }
-
-      const { data: profile } = await supabase
+  
+      // Fetch profile role
+      const { data: profile, error } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .maybeSingle();
-
+  
+      if (error) {
+        console.error("Profile loading error:", error);
+        router.push("/login");
+        return;
+      }
+  
+      // If profile missing: make them a user
       if (!profile) {
         await supabase.from("profiles").insert([
           { id: user.id, email: user.email, role: "user" },
@@ -62,19 +70,20 @@ export default function CreateEvent() {
         router.push("/request_access");
         return;
       }
-
+  
+      // Reject non-admins
       if (profile.role !== "admin") {
         router.push("/request_access");
         return;
       }
-
+  
       setAuthorized(true);
       setLoading(false);
     }
-
+  
     checkAccess();
   }, [router]);
-
+  
   // Add food item
   const addFoodItem = () => {
     setFoodItems((prev) => [...prev, { name: "", quantity: "" }]);
@@ -122,7 +131,18 @@ export default function CreateEvent() {
     router.push("/profile_reserve");
   };
 
-  if (!authorized || loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg">
+        Checking access...
+      </div>
+    );
+  }
+  
+  if (!authorized) {
+    return null; // blocked users see nothing before redirect
+  }
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
