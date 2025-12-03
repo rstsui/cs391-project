@@ -6,75 +6,112 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
+type FoodItem = {
+  name: string;
+  quantity: string;
+};
+
 export default function CreateEvent() {
   const router = useRouter();
+
+  // Admin authorization state
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const [eventName, setEventName] = useState("");
   const [email, setEmail] = useState("");
-  const [foodItem, setFoodItem] = useState("");
+  const [foodType, setFoodType] = useState("");
   const [quantity, setQuantity] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [description, setDescription] = useState("");
+  const [capacity, setCapacity] = useState<number>(50); // default 50
 
-  // Check admin role
- useEffect(() => {
-  async function checkAccess() {
-    setLoading(true);
 
-    const { data: authData } = await supabase.auth.getUser();
-    const user = authData?.user;
 
-    if (!user) {
-      router.push("/login");
-      return;
+
+  // Dynamic food items
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([
+    { name: "", quantity: "" },
+  ]);
+
+  // Admin check
+  useEffect(() => {
+    async function checkAccess() {
+      setLoading(true);
+
+      const { data: authData } = await supabase.auth.getUser();
+      const user = authData?.user;
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!profile) {
+        await supabase.from("profiles").insert([
+          { id: user.id, email: user.email, role: "user" },
+        ]);
+        router.push("/request_access");
+        return;
+      }
+
+      if (profile.role !== "admin") {
+        router.push("/request_access");
+        return;
+      }
+
+      setAuthorized(true);
+      setLoading(false);
     }
 
-    // Load their profile
-    const { data: profile, error } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
+    checkAccess();
+  }, [router]);
 
-    // If profile missing — create one
-    if (!profile) {
-      await supabase.from("profiles").insert([
-        { id: user.id, email: user.email, role: "user" }
-      ]);
+  // Add food item
+  const addFoodItem = () => {
+    setFoodItems((prev) => [...prev, { name: "", quantity: "" }]);
+  };
 
-      router.push("/request_access");
-      return;
-    }
+  // Update field in a food item
+  const updateFoodItem = (
+    index: number,
+    field: "name" | "quantity",
+    value: string
+  ) => {
+    const updated = [...foodItems];
+    updated[index][field] = value;
+    setFoodItems(updated);
+  };
 
-    // Now check permissions
-    if (profile.role !== "admin") {
-      router.push("/request_access");
-      return;
-    }
+  // Remove food item
+  const removeFoodItem = (index: number) => {
+    setFoodItems(foodItems.filter((_, i) => i !== index));
+  };
 
-    setAuthorized(true);
-    setLoading(false);
-  }
-
-  checkAccess();
-}, []);
-
-  const handleSubmit = async (e) => {
+  // Submit Handler
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const { error } = await supabase.from("events").insert([
-      {
-        name: eventName,
-        email,
-        food_item: foodItem,
-        quantity: Number(quantity),
-        location,
-        date: new Date(date).toISOString(),
-        time: date,
-      },
-    ]);
+    const cleanFoodItems = foodItems.filter(
+      (item) => item.name.trim() !== "" && item.quantity !== ""
+    );
+
+    const { error } = await supabase.from("events").insert({
+      title: eventName,
+      organizer_email: email,
+      type_of_food: foodType,
+      quantity: quantity,
+      location: location,
+      event_date: date,
+    });
 
     if (error) {
       alert("Failed to create event.");
@@ -85,7 +122,7 @@ export default function CreateEvent() {
     router.push("/profile_reserve");
   };
 
-  if (!authorized) return null;
+  if (!authorized || loading) return null;
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -99,15 +136,17 @@ export default function CreateEvent() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Event Name */}
             <div>
               <label className="block text-gray-700 mb-1">Event Name</label>
               <input
                 type="text"
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
             </div>
+
 
             <div>
               <label className="block text-gray-700 mb-1">BU Email</label>
@@ -115,27 +154,31 @@ export default function CreateEvent() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
             </div>
 
+            {/* Type of Food */}
             <div>
               <label className="block text-gray-700 mb-1">Type of Food</label>
               <input
                 type="text"
-                value={foodItem}
-                onChange={(e) => setFoodItem(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+                placeholder="Enter type of food"
+                value={foodType}
+                onChange={(e) => setFoodType(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
             </div>
 
+            {/* Quantity */}
             <div>
               <label className="block text-gray-700 mb-1">Quantity</label>
               <input
                 type="number"
+                placeholder="Enter quantity"
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
             </div>
 
@@ -145,7 +188,7 @@ export default function CreateEvent() {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
             </div>
 
@@ -155,8 +198,82 @@ export default function CreateEvent() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
               />
+            </div>
+            <div>
+            <label className="block text-gray-700 mb-1">Time</label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+              required
+            />
+          </div>
+          {/* Capacity */}
+          <div>
+            <label className="block text-gray-700 mb-1"> Event Capacity</label>
+            <input
+              type="number"
+              min="1"
+              placeholder="Number of attendees allowed"
+              value={capacity}
+              onChange={(e) => setCapacity(Number(e.target.value))}
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500"
+              required
+            />
+          </div>
+
+
+
+            {/* Food Items */}
+            <div>
+              <label className="block text-gray-700 mb-2">Food Items</label>
+
+              {foodItems.map((item: FoodItem, index: number) => (
+                <div key={index} className="flex gap-2 mb-2 items-center">
+                  <input
+                    type="text"
+                    placeholder="Food name"
+                    value={item.name}
+                    onChange={(e) =>
+                      updateFoodItem(index, "name", e.target.value)
+                    }
+                    className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
+                    required
+                  />
+
+                  <input
+                    type="number"
+                    placeholder="Qty"
+                    value={item.quantity}
+                    onChange={(e) =>
+                      updateFoodItem(index, "quantity", e.target.value)
+                    }
+                    className="w-24 border border-gray-300 rounded-lg px-3 py-2"
+                    required
+                  />
+
+                  {foodItems.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeFoodItem(index)}
+                      className="text-red-500 text-lg font-bold px-2"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addFoodItem}
+                className="mt-2 text-sm text-teal-600 font-semibold"
+              >
+                + Add another food item
+              </button>
             </div>
 
             <button
