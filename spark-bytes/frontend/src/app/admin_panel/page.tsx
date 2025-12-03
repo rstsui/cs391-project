@@ -10,9 +10,9 @@ export default function AdminPanel() {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ---------------------------
+  
   // SECURITY CHECK: ADMIN ONLY
-  // ---------------------------
+  
   useEffect(() => {
     async function checkRole() {
       const { data: { user } } = await supabase.auth.getUser();
