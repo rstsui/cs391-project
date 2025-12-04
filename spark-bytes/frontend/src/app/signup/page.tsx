@@ -16,29 +16,48 @@ export default function SignupPage() {
       alert("Please enter your BU email.");
       return;
     }
+
     if (password !== confirm) {
       alert("Passwords do not match");
       return;
     }
 
-
-    const { error } = await supabase.auth.signUp({
+    // 1. Create auth user
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
 
     if (error) {
       alert(error.message);
-    } else {
-      alert("Account created!");
-      router.push("/login");
+      return;
     }
+
+    const authUser = data.user;
+    if (!authUser) {
+      alert("Could not create account.");
+      return;
+    }
+
+    // 2. Insert into profiles table
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: authUser.id,
+      email: authUser.email,
+      role: "user", // default role
+    });
+
+    if (profileError) {
+      alert("Failed to create profile: " + profileError.message);
+      console.error(profileError);
+      return;
+    }
+
+    alert("Account created! Check your email to verify.");
+    router.push("/login");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
-
-      {/* SIGNUP BOX */}
       <main className="flex flex-col items-center py-16">
         <div className="bg-gray-200 p-10 rounded-xl w-[350px] shadow">
           <h2 className="text-xl font-bold mb-6">Sign up</h2>
@@ -66,9 +85,7 @@ export default function SignupPage() {
 
           <p className="text-sm mb-4">
             Already have an account?{" "}
-            <Link className="underline" href="/login">
-              Sign in
-            </Link>
+            <Link className="underline" href="/login">Sign in</Link>
           </p>
 
           <button
@@ -80,13 +97,11 @@ export default function SignupPage() {
         </div>
       </main>
 
-      {/* FOOTER */}
       <footer className="bg-black text-white text-center py-10 mt-16">
         <p>
-          Boston University Center of Computing & Data Sciences:
-          <br />Duan Family Spark! Initiative
-          <br />
-          665 Commonwealth Ave., Boston, MA 02215 <br />
+          Boston University Center of Computing & Data Sciences:<br />
+          Duan Family Spark! Initiative<br />
+          665 Commonwealth Ave., Boston, MA 02215<br />
           Floor 2, Spark! Space
         </p>
         <p className="mt-4">buspark@bu.edu</p>
