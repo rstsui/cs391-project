@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Email + password login
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -19,12 +20,13 @@ export default function LoginPage() {
     if (error) {
       alert(error.message);
     } else {
-      router.push("/profile_reserve"); // redirect after login
+      router.push("/profile_reserve");
     }
   };
 
+  // Google login
   const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: "http://localhost:3000/profile_reserve",
@@ -33,8 +35,6 @@ export default function LoginPage() {
 
     if (error) alert(error.message);
   };
-
-  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col">
@@ -73,23 +73,19 @@ export default function LoginPage() {
             Sign In
           </button>
 
-          {/* OR Divider */}
+          {/* Divider */}
           <div className="flex items-center my-6">
             <div className="flex-grow h-px bg-gray-300" />
             <span className="px-3 text-gray-500 text-sm">OR</span>
             <div className="flex-grow h-px bg-gray-300" />
           </div>
 
-          {/* Google Login Button */}
+          {/* Google Login */}
           <button
             onClick={signInWithGoogle}
             className="w-full bg-white border border-gray-300 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition flex items-center justify-center gap-2 shadow-sm"
           >
-            <img
-              src="/google.webp"
-              alt=""
-              className="w-5 h-5"
-            />
+            <img src="/google.webp" alt="" className="w-5 h-5" />
             Continue with Google
           </button>
         </div>
