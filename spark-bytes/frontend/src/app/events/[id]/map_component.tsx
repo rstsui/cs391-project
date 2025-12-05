@@ -16,43 +16,54 @@ const containerStyle = {
 };
 
 // fallback location (BU CDS building)
-const DEFAULT_CENTER = { lat: 42.3505, lng: -71.1054 };
+const DEFAULT_CENTER = { lat: 42.3500229, lng: -71.1031113 };
 
 export default function EventMap({ location }: EventMapProps) {
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-  });
+  googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+});
 
   // geocode the location string into coordinates
   useEffect(() => {
-    if (!isLoaded) return;
-
     async function geocode() {
+      const trimmed = location.trim();
+
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        trimmed
+      )}&key=${process.env.NEXT_PUBLIC_GOOGLE_GEOCODING_API_KEY}`;
+
       try {
-        const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          location
-        )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
+        console.log("Geocoding request for:", trimmed, url);
 
         const res = await fetch(url);
         const data = await res.json();
 
-        if (data.results?.length > 0) {
+        console.log("Geocoding response:", data);
+
+        if (data.status === "OK" && data.results?.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
           setCoords({ lat, lng });
         } else {
-          console.warn("Location not found — using fallback coordinates.");
+          console.warn(
+            "Location not found — using fallback coordinates. Status:",
+            data.status,
+            "Error message:",
+            data.error_message
+          );
           setCoords(DEFAULT_CENTER);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Geocoding error:", err);
         setCoords(DEFAULT_CENTER);
       }
     }
 
-    geocode();
-  }, [location, isLoaded]);
+    if (location) {
+      geocode();
+    }
+  }, [location]);
 
   if (loadError) return <p>Map failed to load.</p>;
   if (!isLoaded) return <p>Loading map library...</p>;

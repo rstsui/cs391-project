@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+
 /* Format time */
 function formatTime(timeString: string) {
   if (!timeString) return "";

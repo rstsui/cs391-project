@@ -194,7 +194,7 @@ export default function CreateEvent() {
 
             {/* Location */}
             <div>
-              <label className="block text-gray-700 mb-1">Location</label>
+              <label className="block text-gray-700 mb-1">Location (please enter complete address or building name)</label>
               <input
                 type="text"
                 value={location}
