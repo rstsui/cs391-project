@@ -20,7 +20,7 @@ export default function LoginPage() {
     if (error) {
       alert(error.message);
     } else {
-      router.push("/profile_reserve");
+      router.push("/profile_page");
     }
   };
 
