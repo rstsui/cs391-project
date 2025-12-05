@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 
 type RequestRow = {
   id: string;
@@ -13,10 +14,41 @@ type RequestRow = {
 };
 
 export default function AdminRequestsPage() {
+  const router = useRouter();
+
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null); // null = still checking
   const [requests, setRequests] = useState<RequestRow[]>([]);
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
-  // Fetch all admin requests from the VIEW
+  // Admin Gatekeeping
+  useEffect(() => {
+    async function checkAdmin() {
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth?.user;
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!profile || profile.role !== "admin") {
+        router.push("/request_access");
+        return;
+      }
+
+      setIsAdmin(true);
+    }
+
+    checkAdmin();
+  }, [router]);
+
+  // Load Requests
   async function loadRequests() {
     const { data, error } = await supabase
       .from("admin_requests_with_profiles")
@@ -30,48 +62,85 @@ export default function AdminRequestsPage() {
 
     if (!data) return;
 
-    const cleaned = data.map((row: any) => ({
-      id: row.id,
-      user_id: row.user_id,
-      message: row.message,
-      status: row.status,
-      requested_at: row.requested_at,
-      email: row.email,
-    }));
-
-    setRequests(cleaned);
+    setRequests(
+      data.map((row: any) => ({
+        id: row.id,
+        user_id: row.user_id,
+        message: row.message,
+        status: row.status,
+        requested_at: row.requested_at,
+        email: row.email,
+      }))
+    );
   }
 
   useEffect(() => {
-    loadRequests();
-  }, []);
+    if (isAdmin) loadRequests();
+  }, [isAdmin]);
 
-  // Approve or reject
+  // Update Request Status
   async function updateStatus(id: string, newStatus: "approved" | "rejected") {
-    const { error } = await supabase
+    // fetch user_id
+    const { data: reqRow } = await supabase
+      .from("admin_requests")
+      .select("user_id")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (!reqRow) return alert("Unable to load request.");
+
+    const userId = reqRow.user_id;
+
+    // update request
+    const { error: statusErr } = await supabase
       .from("admin_requests")
       .update({ status: newStatus })
       .eq("id", id);
 
-    if (error) {
-      alert("Error updating request: " + error.message);
+    if (statusErr) {
+      alert(statusErr.message);
       return;
+    }
+
+    // promote to admin
+    if (newStatus === "approved") {
+      const { error: roleErr } = await supabase
+        .from("profiles")
+        .update({ role: "admin" })
+        .eq("id", userId);
+
+      if (roleErr) {
+        alert(roleErr.message);
+        return;
+      }
     }
 
     loadRequests();
   }
 
-  // Filtering logic
+  // FILTER SYSTEM
   const filteredRequests =
-    filter === "all"
-      ? requests
-      : requests.filter((req) => req.status === filter);
+    filter === "all" ? requests : requests.filter((req) => req.status === filter);
+
+  // Render Logic
+
+  // Still checking admin?
+  if (isAdmin === null) {
+    return (
+      <div className="p-10 text-center">
+        Checking access…
+      </div>
+    );
+  }
+
+  // Non-admin users will already be redirected.
+  if (!isAdmin) return null;
 
   return (
     <div className="p-10 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Admin Access Requests</h1>
 
-      {/* FILTER TABS */}
+      {/* FILTER BUTTONS */}
       <div className="flex gap-4 mb-6">
         {["all", "pending", "approved", "rejected"].map((f) => (
           <button
@@ -83,25 +152,19 @@ export default function AdminRequestsPage() {
                 : "bg-white text-gray-700 border-gray-300"
             }`}
           >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
+            {f[0].toUpperCase() + f.slice(1)}
           </button>
         ))}
       </div>
 
-      {/* REQUEST LIST */}
       {filteredRequests.length === 0 && (
         <p className="text-gray-600">No requests found.</p>
       )}
 
       {filteredRequests.map((req) => (
-        <div
-          key={req.id}
-          className="border p-5 rounded-xl shadow-sm bg-white mb-4"
-        >
-          <div className="flex justify-between items-center mb-2">
+        <div key={req.id} className="border p-5 rounded-xl shadow-sm bg-white mb-4">
+          <div className="flex justify-between mb-2">
             <p className="font-semibold text-lg">{req.email}</p>
-
-            {/* STATUS BADGE */}
             <span
               className={`px-3 py-1 text-sm rounded-full ${
                 req.status === "pending"
@@ -111,28 +174,28 @@ export default function AdminRequestsPage() {
                   : "bg-red-100 text-red-800"
               }`}
             >
-              {req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+              {req.status[0].toUpperCase() + req.status.slice(1)}
             </span>
           </div>
 
           <p className="text-gray-700 mb-3">{req.message}</p>
+
           <p className="text-sm text-gray-500 mb-4">
             Requested on: {new Date(req.requested_at).toLocaleString()}
           </p>
 
-          {/* APPROVE / REJECT BUTTONS — only show if pending */}
           {req.status === "pending" && (
             <div className="flex gap-3">
               <button
                 onClick={() => updateStatus(req.id, "approved")}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
               >
                 Approve
               </button>
 
               <button
                 onClick={() => updateStatus(req.id, "rejected")}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
               >
                 Reject
               </button>
