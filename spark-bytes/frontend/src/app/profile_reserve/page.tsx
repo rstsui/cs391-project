@@ -78,47 +78,71 @@ export default function ProfileReserve() {
       `Cancel reservation for ${rsvp.food_item} (x${rsvp.quantity})?`
     );
     if (!confirmDelete) return;
-
+  
     const event = events.find((e) => e.id === rsvp.event_id);
-    if (!event) return;
-
-    // Restore quantity
+  
+    if (!event) {
+      alert("Event not found.");
+      return;
+    }
+  
+    if (!Array.isArray(event.food_items)) {
+      alert("Invalid event food data.");
+      return;
+    }
+  
+    // 1. Restore food inventory
     const updatedFoodItems = event.food_items.map((item: any) =>
       item.name === rsvp.food_item
         ? { ...item, quantity: item.quantity + rsvp.quantity }
         : item
     );
-
-    // Update event inventory
+  
+    // 2. Restore attendee capacity
+    const updatedAttendees = (event.attendees || 0) - 1; 
+  
+    // 3. Update event in DB
     const { error: updateError } = await supabase
       .from("events")
-      .update({ food_items: updatedFoodItems })
+      .update({
+        food_items: updatedFoodItems,
+        attendees: updatedAttendees
+      })
       .eq("id", event.id);
-
+  
     if (updateError) {
-      alert("Failed to restore food quantity.");
       console.error(updateError);
+      alert("Failed to update event data.");
       return;
     }
-
-    // Delete RSVP
+  
+    // 4. Delete RSVP
     const { error: deleteError } = await supabase
       .from("rsvps")
       .delete()
       .eq("id", rsvp.id);
-
+  
     if (deleteError) {
-      alert("Failed to cancel reservation.");
       console.error(deleteError);
+      alert("Failed to cancel reservation.");
       return;
     }
-
+  
     alert("Reservation canceled.");
-
-    // Update UI
-    setRsvps((prev) => prev.filter((item) => item.id !== rsvp.id));
+  
+    // 5. Update UI state
+    setEvents(prev =>
+      prev.map(e =>
+        e.id === event.id
+          ? { ...e, food_items: updatedFoodItems, attendees: updatedAttendees }
+          : e
+      )
+    );
+  
+    setRsvps(prev => prev.filter((x) => x.id !== rsvp.id));
   };
-
+  
+  
   /* SAVE EDIT */
   const handleEditSubmit = async () => {
     if (!editingRsvp) return;
@@ -266,8 +290,8 @@ export default function ProfileReserve() {
 
       {/* EDIT POPUP */}
       {editingRsvp && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-96 shadow-xl">
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-xl w-96 shadow-xl">
             <h2 className="text-xl font-semibold mb-4">
               Edit Reservation — {events.find((e) => e.id === editingRsvp.event_id)?.title}
             </h2>
