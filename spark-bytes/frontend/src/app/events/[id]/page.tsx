@@ -4,6 +4,11 @@ import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const EventMap = dynamic(() => import("./map_component"), {
+  ssr: false,
+});
 
 // Event + Food Types
 type FoodItem = {
@@ -36,6 +41,10 @@ export default function EventInfoPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  
+  // TEMPORARY: dummy location data for EventMap
+  const dummyLat = 42.3498;
+  const dummyLng = -71.0990;
 
   // Fetch event + RSVPs
   useEffect(() => {
@@ -173,8 +182,8 @@ export default function EventInfoPage() {
               </p>
             </div>
 
-            <div className="w-full bg-gray-200 h-64 flex items-center justify-center text-gray-600 rounded-lg border border-gray-300">
-              Map or Event Image Here
+            <div className="w-full h-64 rounded-lg border border-gray-300 overflow-hidden">
+              <EventMap lat={dummyLat} lng={dummyLng} />
             </div>
           </div>
 
