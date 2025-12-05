@@ -298,8 +298,7 @@ const handleEditSubmit = async () => {
         <p className="text-lg text-center mb-12">Food pickups you have reserved</p>
 
         <section className="flex flex-wrap justify-center gap-6 px-8 pb-12 mt-10">
-          {rsvps.length === 0 && (
-            <p className="text-gray-700 text-center">You have no reservations yet.</p>
+          {rsvps.length === 0 && (            <p className="text-gray-700 text-center">You have no reservations yet.</p>
           )}
 
           {rsvps.map((rsvp) => {
