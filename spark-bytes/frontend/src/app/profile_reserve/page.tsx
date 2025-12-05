@@ -19,6 +19,11 @@ function formatTime(timeString: string) {
 
   return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
 }
+type FoodItem = {
+  name: string;
+  quantity: number;
+};
+
 
 export default function ProfileReserve() {
   const router = useRouter();
@@ -47,13 +52,14 @@ export default function ProfileReserve() {
         alert("You must use your BU email to log in.");
         router.push("/login");
         return;
-      }
+      } 
 
       // Load RSVPs
-      const { data: rsvpData, error: rsvpError } = await supabase
-        .from("rsvps")
-        .select("*")
-        .eq("email", user.email);
+      const { data: rsvpData, error: rsvpError} = await supabase
+      .from("rsvps")
+      .select("*, rsvp_items(*)")   // JOIN rsvp_items
+      .eq("email", user.email);
+    
 
       if (rsvpError) console.error("RSVP fetch error:", rsvpError);
 
@@ -73,153 +79,216 @@ export default function ProfileReserve() {
   }, [router]);
 
   /* CANCEL A RESERVATION */
-  const handleCancel = async (rsvp: any) => {
-    const confirmDelete = confirm(
-      `Cancel reservation for ${rsvp.food_item} (x${rsvp.quantity})?`
+/* CANCEL A RESERVATION — supports multiple food items */
+const handleCancel = async (rsvp: any) => {
+  const yes = confirm("Cancel this reservation?");
+  if (!yes) return;
+
+  // 1. Load all food items attached to this RSVP
+  const { data: items, error: itemsError } = await supabase
+    .from("rsvp_items")
+    .select("*")
+    .eq("rsvp_id", rsvp.id);
+
+  if (itemsError) {
+    console.error(itemsError);
+    alert("Could not load reservation items.");
+    return;
+  }
+
+  const event = events.find(e => e.id === rsvp.event_id);
+  if (!event) {
+    alert("Event not found.");
+    return;
+  }
+
+  // 2. Restore EVERY food item qty
+  let updatedFood = [...event.food_items];
+
+  items.forEach((item: any) => {
+    updatedFood = updatedFood.map((food: any) =>
+      food.name === item.food_item
+        ? { ...food, quantity: food.quantity + item.quantity }
+        : food
     );
-    if (!confirmDelete) return;
-  
-    const event = events.find((e) => e.id === rsvp.event_id);
-  
-    if (!event) {
-      alert("Event not found.");
-      return;
+  });
+
+  // 3. Update event inventory + attendees count
+  const { error: updateError } = await supabase
+    .from("events")
+    .update({
+      food_items: updatedFood,
+      attendees: Math.max(0, (event.attendees || 1) - 1)
+    })
+    .eq("id", event.id);
+
+  if (updateError) {
+    console.error(updateError);
+    alert("Failed to update event inventory.");
+    return;
+  }
+
+  // 4. Delete all rsvp_items rows for this rsvp
+  await supabase.from("rsvp_items").delete().eq("rsvp_id", rsvp.id);
+
+  // 5. Delete the rsvp itself
+  const { error: deleteError } = await supabase
+    .from("rsvps")
+    .delete()
+    .eq("id", rsvp.id);
+
+  if (deleteError) {
+    console.error(deleteError);
+    alert("Failed to delete RSVP.");
+    return;
+  }
+
+  alert("Reservation canceled.");
+
+  // 6. Update UI
+  setEvents(prev =>
+    prev.map(e =>
+      e.id === event.id
+        ? { ...e, food_items: updatedFood, attendees: event.attendees - 1 }
+        : e
+    )
+  );
+
+  setRsvps(prev => prev.filter(x => x.id !== rsvp.id));
+};
+/* SAVE EDIT — supports multiple food items */
+/* SAVE EDIT — supports multiple food items */
+const handleEditSubmit = async () => {
+  if (!editingRsvp) return;
+
+  const rsvpId = editingRsvp.id;
+  const event = events.find((e) => e.id === editingRsvp.event_id);
+  if (!event) return;
+
+  /* 1. Load existing rsvp_items */
+  const { data: existingItems, error: loadErr } = await supabase
+    .from("rsvp_items")
+    .select("*")
+    .eq("rsvp_id", rsvpId);
+
+  if (loadErr) {
+    console.error(loadErr);
+    alert("Failed to load existing items.");
+    return;
+  }
+
+  /* 2. Find the original item */
+  const oldItem = existingItems.find(
+    (i: { food_item: string }) => i.food_item === editFood
+  );
+  const oldQty = oldItem?.quantity || 0;
+  const newQty = editQuantity;
+
+  /* Enforce max rule */
+  if (newQty > 3) {
+    alert("You may only reserve up to 3 of each item.");
+    return;
+  }
+
+  /* 3. Recalculate event inventory */
+  const updatedFood = event.food_items.map(
+    (item: { name: string; quantity: number }) => {
+      if (item.name === editFood) {
+        return {
+          ...item,
+          quantity: item.quantity + oldQty - newQty,
+        };
+      }
+      return item;
     }
-  
-    if (!Array.isArray(event.food_items)) {
-      alert("Invalid event food data.");
-      return;
-    }
-  
-    // 1. Restore food inventory
-    const updatedFoodItems = event.food_items.map((item: any) =>
-      item.name === rsvp.food_item
-        ? { ...item, quantity: item.quantity + rsvp.quantity }
-        : item
-    );
-  
-    // 2. Restore attendee capacity
-    const updatedAttendees = (event.attendees || 0) - 1; 
-  
-    // 3. Update event in DB
-    const { error: updateError } = await supabase
+  );
+
+  /* Prevent negatives */
+  if (updatedFood.some((i: { quantity: number }) => i.quantity < 0)) {
+    alert("Not enough quantity available.");
+    return;
+  }
+
+  /* 4. If quantity becomes 0 → delete item */
+  if (newQty === 0 && oldItem) {
+    await supabase.from("rsvp_items").delete().eq("id", oldItem.id);
+
+    await supabase
       .from("events")
-      .update({
-        food_items: updatedFoodItems,
-        attendees: updatedAttendees
-      })
+      .update({ food_items: updatedFood })
       .eq("id", event.id);
-  
-    if (updateError) {
-      console.error(updateError);
-      alert("Failed to update event data.");
-      return;
-    }
-  
-    // 4. Delete RSVP
-    const { error: deleteError } = await supabase
-      .from("rsvps")
-      .delete()
-      .eq("id", rsvp.id);
-  
-    if (deleteError) {
-      console.error(deleteError);
-      alert("Failed to cancel reservation.");
-      return;
-    }
-  
-    alert("Reservation canceled.");
-  
-    // 5. Update UI state
-    setEvents(prev =>
-      prev.map(e =>
-        e.id === event.id
-          ? { ...e, food_items: updatedFoodItems, attendees: updatedAttendees }
-          : e
+
+    alert("Item removed!");
+
+    /* Update UI */
+    setEvents((prev) =>
+      prev.map((ev) =>
+        ev.id === event.id ? { ...ev, food_items: updatedFood } : ev
       )
     );
-  
-    setRsvps(prev => prev.filter((x) => x.id !== rsvp.id));
-  };
-  
-  
-  /* SAVE EDIT */
-  const handleEditSubmit = async () => {
-    if (!editingRsvp) return;
-
-    const event = events.find((e) => e.id === editingRsvp.event_id);
-    if (!event) return;
-
-    const oldFood = editingRsvp.food_item;
-    const oldQty = editingRsvp.quantity;
-
-    // Add old qty back first
-    let updated = event.food_items.map((item: any) =>
-      item.name === oldFood
-        ? { ...item, quantity: item.quantity + oldQty }
-        : item
-    );
-
-    // Subtract new qty
-    updated = updated.map((item: any) =>
-      item.name === editFood
-        ? { ...item, quantity: item.quantity - editQuantity }
-        : item
-    );
-
-    // Check inventory
-    if (updated.some((item: any) => item.quantity < 0)) {
-      alert("Not enough quantity available.");
-      return;
-    }
-
-    // Update RSVP
-    const { error: rsvpUpdateError } = await supabase
-      .from("rsvps")
-      .update({
-        food_item: editFood,
-        quantity: editQuantity,
-      })
-      .eq("id", editingRsvp.id);
-
-    if (rsvpUpdateError) {
-      alert("Failed to update RSVP.");
-      return;
-    }
-
-    // Update event food list
-    const { error: eventError } = await supabase
-      .from("events")
-      .update({ food_items: updated })
-      .eq("id", event.id);
-
-    if (eventError) {
-      alert("Failed to update event food inventory.");
-      return;
-    }
-
-    alert("Reservation updated!");
-
-    // Update UI
-    setEditingRsvp(null);
 
     setRsvps((prev) =>
-      prev.map((item) =>
-        item.id === editingRsvp.id
-          ? { ...item, food_item: editFood, quantity: editQuantity }
-          : item
+      prev.map((r) =>
+        r.id === rsvpId
+          ? {
+              ...r,
+              rsvp_items: existingItems.filter(
+                (it: any) => it.food_item !== editFood
+              ),
+            }
+          : r
       )
     );
-  };
 
-  /* LOADING SCREEN */
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center text-lg">
-        Loading reservations...
-      </div>
-    );
+    setEditingRsvp(null);
+    return;
   }
+
+  /* 5. Update or insert new rsvp_item row */
+  if (oldItem) {
+    await supabase
+      .from("rsvp_items")
+      .update({ quantity: newQty })
+      .eq("id", oldItem.id);
+  } else {
+    await supabase.from("rsvp_items").insert({
+      rsvp_id: rsvpId,
+      food_item: editFood,
+      quantity: newQty,
+    });
+  }
+
+  /* 6. Update event inventory */
+  await supabase
+    .from("events")
+    .update({ food_items: updatedFood })
+    .eq("id", event.id);
+
+  alert("Reservation item updated!");
+
+  /* 7. Update UI immediately */
+  const updatedItems =
+    oldItem
+      ? existingItems.map((it: any) =>
+          it.food_item === editFood ? { ...it, quantity: newQty } : it
+        )
+      : [...existingItems, { food_item: editFood, quantity: newQty }];
+
+  setEvents((prev) =>
+    prev.map((ev) =>
+      ev.id === event.id ? { ...ev, food_items: updatedFood } : ev
+    )
+  );
+
+  setRsvps((prev) =>
+    prev.map((r) =>
+      r.id === rsvpId ? { ...r, rsvp_items: updatedItems } : r
+    )
+  );
+
+  setEditingRsvp(null);
+};
+
 
   /* UI */
   return (
@@ -256,12 +325,20 @@ export default function ProfileReserve() {
                 </p>
 
                 <p className="text-gray-700 mt-3">
-                  <strong>Food Item:</strong> {rsvp.food_item}
-                </p>
+                    <strong>Items:</strong>
+                  </p>
+                  {rsvp.rsvp_items && rsvp.rsvp_items.length > 0 ? (
+                    <ul className="list-disc ml-5 text-gray-700">
+                      {rsvp.rsvp_items.map((item: any) => (
+                        <li key={item.id}>
+                          {item.food_item} &times; {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-gray-700">No items reserved.</p>
+                  )}
 
-                <p className="text-gray-700">
-                  <strong>Quantity:</strong> {rsvp.quantity}
-                </p>
 
                 <div className="flex gap-3 mt-6">
                   <button
@@ -274,13 +351,16 @@ export default function ProfileReserve() {
                   <button
                     onClick={() => {
                       setEditingRsvp(rsvp);
-                      setEditFood(rsvp.food_item);
-                      setEditQuantity(rsvp.quantity);
+
+                      const firstItem = rsvp.rsvp_items?.[0];
+                      setEditFood(firstItem?.food_item || "");      // use first reserved item
+                      setEditQuantity(firstItem?.quantity || 1);    // default quantity
                     }}
                     className="bg-gray-200 text-gray-800 px-4 py-1 rounded-md hover:bg-gray-300"
                   >
                     Edit
                   </button>
+
                 </div>
               </div>
             );
@@ -298,7 +378,7 @@ export default function ProfileReserve() {
 
             <label className="block font-medium mb-1">Food Item</label>
             <select
-              value={editFood}
+              value={editFood || ""} 
               onChange={(e) => setEditFood(e.target.value)}
               className="border w-full px-3 py-2 rounded mb-4"
             >

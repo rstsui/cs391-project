@@ -48,11 +48,13 @@ export default function EventInfoPage() {
 
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedFood, setSelectedFood] = useState("");
-  const [quantity, setQuantity] = useState(1);
+
   const [loggedInUser, setLoggedInUser] = useState<any>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  //supports multiple selected food items
+  const [selectedItems, setSelectedItems] = useState<{ name: string; quantity: number }[]>([]);
+
   
   // TEMPORARY: dummy location data for EventMap
   const dummyLat = 42.3498;
@@ -88,65 +90,90 @@ export default function EventInfoPage() {
   async function handleReserve(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!event) return;
-
-    // 1. Capacity check
+  
+    // Must select at least 1 item
+    if (selectedItems.length === 0) {
+      alert("Please select at least one food item.");
+      return;
+    }
+  
+    // Capacity check
     if (event.attendees >= event.capacity) {
       alert("This event is full.");
       return;
     }
-
-    // 2. Food availability
-    const foodObj = event.food_items.find((f) => f.name === selectedFood);
-    if (!foodObj) {
-      alert("Invalid food selection.");
-      return;
+  
+    // Validate each selected item
+    for (const sel of selectedItems) {
+      const foodObj = event.food_items.find(f => f.name === sel.name);
+  
+      if (!foodObj) {
+        alert(`Invalid food selection: ${sel.name}`);
+        return;
+      }
+  
+      if (sel.quantity > foodObj.quantity) {
+        alert(`Not enough ${sel.name} available.`);
+        return;
+      }
+  
+      if (sel.quantity > 3) {
+        alert(`You can only reserve up to 3 of ${sel.name}.`);
+        return;
+      }
     }
-
-    if (quantity > foodObj.quantity) {
-      alert("Not enough quantity available.");
-      return;
-    }
-
-    // 3. Max 3 per person
-    if (quantity > 3) {
-      alert("You can only reserve up to 3 items.");
-      return;
-    }
-
-    // 4. Prevent duplicate RSVPs by email
+  
+    // Prevent duplicate RSVPs by email
     const { data: existingRSVP } = await supabase
       .from("rsvps")
       .select("*")
       .eq("email", email)
       .eq("event_id", eventId);
-
+  
     if (existingRSVP && existingRSVP.length > 0) {
-      alert("You already reserved food for this event.");
+      alert("You already reserved food for this event. Go to my events to view or edit your reservation.");
       return;
     }
-
-    // Insert new RSVP
-    const { error } = await supabase.from("rsvps").insert({
-      event_id: event.id,
-      name,
-      email,
-      food_item: selectedFood,
-      quantity,
-    });
-
-    if (error) {
-      console.error("SUPABASE RSVP ERROR →", JSON.stringify(error, null, 2));
+  
+    // 1️⃣ Insert RSVP base record
+    const { data: newRsvp, error: rsvpError } = await supabase
+      .from("rsvps")
+      .insert({ event_id: event.id, name, email })
+      .select()
+      .maybeSingle();
+  
+    if (rsvpError) {
+      console.error(rsvpError);
       alert("Failed to reserve.");
       return;
     }
-
-    // Update event attendees count AND food quantity
-    const updatedFood = event.food_items.map((item) =>
-      item.name === selectedFood
-        ? { ...item, quantity: item.quantity - quantity }
-        : item
-    );
-
+  
+    // 2️⃣ Insert multiple selected food items
+    const itemsPayload = selectedItems.map(item => ({
+      rsvp_id: newRsvp.id,
+      food_item: item.name,
+      quantity: item.quantity,
+    }));
+  
+    const { error: itemsError } = await supabase
+      .from("rsvp_items")
+      .insert(itemsPayload);
+  
+    if (itemsError) {
+      console.error(itemsError);
+      alert("Failed to save food selections.");
+      return;
+    }
+  
+    // 3️⃣ Update event food inventory (subtract each selected quantity)
+    const updatedFood = event.food_items.map(item => {
+      const sel = selectedItems.find(s => s.name === item.name);
+      return sel
+        ? { ...item, quantity: item.quantity - sel.quantity }
+        : item;
+    });
+  
+    // Increase attendees by 1 (one reservation = one attendee)
     await supabase
       .from("events")
       .update({
@@ -154,10 +181,11 @@ export default function EventInfoPage() {
         food_items: updatedFood,
       })
       .eq("id", event.id);
-
+  
     alert("Reservation confirmed!");
     router.refresh();
   }
+  
 
   if (loading || !event)
     return <div className="p-10 text-center">Loading event...</div>;
@@ -212,7 +240,7 @@ export default function EventInfoPage() {
 <div className="md:w-1/3 w-full">
   <div className="bg-teal-600 text-white p-8 rounded-2xl shadow-md h-full flex flex-col justify-center">
 
-    {/* ⭐ If not logged in → show login message */}
+    {/*  If not logged in → show login message */}
     {!loggedInUser ? (
       <div className="text-center">
         <h3 className="text-xl font-semibold mb-4">Log in to reserve food</h3>
@@ -225,7 +253,7 @@ export default function EventInfoPage() {
       </div>
     ) : (
       <>
-        {/* ⭐ If logged in → show reservation form */}
+        {/*  If logged in → show reservation form */}
         <h3 className="text-xl font-semibold mb-6 text-center">
           Reserve Food
         </h3>
@@ -253,37 +281,43 @@ export default function EventInfoPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm mb-1">Select Food</label>
-            <select
-              required
-              value={selectedFood}
-              onChange={(e) => setSelectedFood(e.target.value)}
-              className="p-2 w-full rounded-md text-black"
-            >
-              <option value="">Select an item</option>
-              {event.food_items.map((item, i) =>
-                item.quantity > 0 ? (
-                  <option key={i} value={item.name}>
-                    {item.name} ({item.quantity} left)
-                  </option>
-                ) : null
-              )}
-            </select>
-          </div>
 
-          <div>
-            <label className="block text-sm mb-1">Quantity</label>
-            <input
-              type="number"
-              min="1"
-              max="3"
-              required
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="p-2 w-full rounded-md text-black"
-            />
-            <p className="text-xs mt-1 opacity-80">Max 3 per person</p>
+          <div className="space-y-4">
+
+          {event.food_items.map((item, i) => (
+            <div key={i} className="flex items-center justify-between gap-2 bg-white text-black p-2 rounded-md">
+              <div className="flex-1">
+                {item.name} ({item.quantity} left)
+              </div>
+
+              <input
+                type="number"
+                min={0}
+                max={3}
+                value={selectedItems.find(si => si.name === item.name)?.quantity || 0}
+                onChange={(e) => {
+                  const qty = Number(e.target.value);
+
+                  setSelectedItems(prev => {
+                    // Remove if qty = 0
+                    if (qty === 0) return prev.filter(p => p.name !== item.name);
+
+                    // Update or add
+                    const exists = prev.find(p => p.name === item.name);
+                    if (exists) {
+                      return prev.map(p => p.name === item.name ? { ...p, quantity: qty } : p);
+                    }
+                    return [...prev, { name: item.name, quantity: qty }];
+                  });
+                }}
+                className="w-20 p-1 border rounded"
+              />
+            </div>
+          ))}
+
+          <p className="text-xs opacity-80 mt-2">
+            You may select up to 3 of each item.
+          </p>
           </div>
 
           <button
