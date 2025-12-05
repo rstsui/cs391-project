@@ -5,17 +5,29 @@ import { supabase } from "@/lib/supabaseClient";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+/* Format time */
+function formatTime(timeString: string) {
+  if (!timeString) return "";
+
+  const [hourStr, minuteStr] = timeString.split(":");
+  let hour = parseInt(hourStr);
+  const minute = parseInt(minuteStr);
+
+  const ampm = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+  if (hour === 0) hour = 12;
+
+  return `${hour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+}
 
 const EventMap = dynamic(() => import("./map_component"), {
   ssr: false,
 });
-
-// Event + Food Types
 type FoodItem = {
   name: string;
   quantity: number;
 };
-
 type EventType = {
   id: number;
   title: string;
@@ -38,7 +50,7 @@ export default function EventInfoPage() {
   const [loading, setLoading] = useState(true);
   const [selectedFood, setSelectedFood] = useState("");
   const [quantity, setQuantity] = useState(1);
-
+  const [loggedInUser, setLoggedInUser] = useState<any>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   
@@ -54,6 +66,11 @@ export default function EventInfoPage() {
         .select("*")
         .eq("id", eventId)
         .maybeSingle();
+      // Check user login status
+    // Check user login status
+      const { data: userData } = await supabase.auth.getUser();
+      setLoggedInUser(userData?.user || null);
+
 
       if (error) {
         console.error(error);
@@ -165,7 +182,10 @@ export default function EventInfoPage() {
                 <strong>Date:</strong> {event.event_date}
               </p>
               <p>
-                <strong>Time:</strong> {event.event_time}
+                <strong>Time:</strong> {formatTime(event.event_time)}
+              </p>
+              <p>
+                <strong>Created by:</strong> {event.organizer_email}
               </p>
               <p>
                 <strong>Available Food:</strong>
@@ -188,77 +208,96 @@ export default function EventInfoPage() {
           </div>
 
           {/* Reservation Form */}
-          <div className="md:w-1/3 w-full">
-            <div className="bg-teal-600 text-white p-8 rounded-2xl shadow-md h-full flex flex-col justify-center">
-              <h3 className="text-xl font-semibold mb-6 text-center">
-                Reserve Food
-              </h3>
+{/* Reservation Form / Login Prompt */}
+<div className="md:w-1/3 w-full">
+  <div className="bg-teal-600 text-white p-8 rounded-2xl shadow-md h-full flex flex-col justify-center">
 
-              <form className="flex flex-col gap-4" onSubmit={handleReserve}>
-                <div>
-                  <label className="block text-sm mb-1">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="p-2 w-full rounded-md text-black"
-                  />
-                </div>
+    {/* ⭐ If not logged in → show login message */}
+    {!loggedInUser ? (
+      <div className="text-center">
+        <h3 className="text-xl font-semibold mb-4">Log in to reserve food</h3>
+        <button
+          onClick={() => router.push("/login")}
+          className="bg-white text-teal-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-100"
+        >
+          Log In
+        </button>
+      </div>
+    ) : (
+      <>
+        {/* ⭐ If logged in → show reservation form */}
+        <h3 className="text-xl font-semibold mb-6 text-center">
+          Reserve Food
+        </h3>
 
-                <div>
-                  <label className="block text-sm mb-1">BU Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="p-2 w-full rounded-md text-black"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm mb-1">Select Food</label>
-                  <select
-                    required
-                    value={selectedFood}
-                    onChange={(e) => setSelectedFood(e.target.value)}
-                    className="p-2 w-full rounded-md text-black"
-                  >
-                    <option value="">Select an item</option>
-                    {event.food_items.map((item, i) =>
-                      item.quantity > 0 ? (
-                        <option key={i} value={item.name}>
-                          {item.name} ({item.quantity} left)
-                        </option>
-                      ) : null
-                    )}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm mb-1">Quantity</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="3"
-                    required
-                    value={quantity}
-                    onChange={(e) => setQuantity(Number(e.target.value))}
-                    className="p-2 w-full rounded-md text-black"
-                  />
-                  <p className="text-xs mt-1 opacity-80">Max 3 per person</p>
-                </div>
-
-                <button
-                  type="submit"
-                  className="bg-white text-teal-700 font-semibold py-2 rounded-md hover:bg-gray-100 mt-4"
-                >
-                  Reserve
-                </button>
-              </form>
-            </div>
+        <form className="flex flex-col gap-4" onSubmit={handleReserve}>
+          <div>
+            <label className="block text-sm mb-1">Full Name</label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="p-2 w-full rounded-md text-black"
+            />
           </div>
+
+          <div>
+            <label className="block text-sm mb-1">BU Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="p-2 w-full rounded-md text-black"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Select Food</label>
+            <select
+              required
+              value={selectedFood}
+              onChange={(e) => setSelectedFood(e.target.value)}
+              className="p-2 w-full rounded-md text-black"
+            >
+              <option value="">Select an item</option>
+              {event.food_items.map((item, i) =>
+                item.quantity > 0 ? (
+                  <option key={i} value={item.name}>
+                    {item.name} ({item.quantity} left)
+                  </option>
+                ) : null
+              )}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Quantity</label>
+            <input
+              type="number"
+              min="1"
+              max="3"
+              required
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="p-2 w-full rounded-md text-black"
+            />
+            <p className="text-xs mt-1 opacity-80">Max 3 per person</p>
+          </div>
+
+          <button
+            type="submit"
+            className="bg-white text-teal-700 font-semibold py-2 rounded-md hover:bg-gray-100 mt-4"
+          >
+            Reserve
+          </button>
+        </form>
+      </>
+    )}
+  </div>
+</div>
+
         </div>
       </main>
 
