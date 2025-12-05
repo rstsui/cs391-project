@@ -203,7 +203,7 @@ export default function EventInfoPage() {
             </div>
 
             <div className="w-full h-64 rounded-lg border border-gray-300 overflow-hidden">
-              <EventMap lat={dummyLat} lng={dummyLng} />
+              <EventMap location={event.location} />
             </div>
           </div>
 

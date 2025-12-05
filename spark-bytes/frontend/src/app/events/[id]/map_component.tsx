@@ -15,7 +15,7 @@ const containerStyle = {
   borderRadius: "0.75rem",
 };
 
-// Optional: fallback center (BU CDS building)
+// fallback location (BU CDS building)
 const DEFAULT_CENTER = { lat: 42.3505, lng: -71.1054 };
 
 export default function EventMap({ location }: EventMapProps) {
@@ -25,7 +25,7 @@ export default function EventMap({ location }: EventMapProps) {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
   });
 
-  // Geocode the location string → coordinates
+  // geocode the location string into coordinates
   useEffect(() => {
     if (!isLoaded) return;
 
