@@ -54,10 +54,6 @@ export default function EventInfoPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   
-  // TEMPORARY: dummy location data for EventMap
-  const dummyLat = 42.3498;
-  const dummyLng = -71.0990;
-
   // Fetch event + RSVPs
   useEffect(() => {
     async function loadEvent() {
