@@ -29,7 +29,7 @@ function SearchPage() {
     const [events, setEvents] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [filtered, setFiltered] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [query, setQuery] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    // Load events
+    // Load events on mount
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         async function loadEvents() {
             const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("events").select("*").order("created_at", {
@@ -44,7 +44,10 @@ function SearchPage() {
         }
         loadEvents();
     }, []);
+    // Search function
     const handleSearch = async ()=>{
+        const lower = query.toLowerCase();
+        // Fetch events matching title or location
         const { data, error } = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("events").select("*").or(`title.ilike.%${query}%,location.ilike.%${query}%`).order("created_at", {
             ascending: false
         });
@@ -52,7 +55,14 @@ function SearchPage() {
             console.error(error);
             return;
         }
-        setFiltered(data || []);
+        // Filter food_items and safely check title/location
+        const filteredData = (data || []).filter((event)=>{
+            const titleMatch = event.title?.toLowerCase().includes(lower);
+            const locationMatch = event.location?.toLowerCase().includes(lower);
+            const foodMatch = event.food_items?.some((item)=>item.name?.toLowerCase().includes(lower));
+            return titleMatch || locationMatch || foodMatch;
+        });
+        setFiltered(filteredData);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen bg-gradient-to-br from-gray-100 via-white to-teal-100 flex flex-col",
@@ -65,7 +75,7 @@ function SearchPage() {
                         children: "Search Spark!Bytes Events"
                     }, void 0, false, {
                         fileName: "[project]/src/app/search/page.tsx",
-                        lineNumber: 83,
+                        lineNumber: 96,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -79,7 +89,7 @@ function SearchPage() {
                                 className: "flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/search/page.tsx",
-                                lineNumber: 89,
+                                lineNumber: 102,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -88,13 +98,13 @@ function SearchPage() {
                                 children: "Search"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/search/page.tsx",
-                                lineNumber: 96,
+                                lineNumber: 109,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/search/page.tsx",
-                        lineNumber: 88,
+                        lineNumber: 101,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -105,7 +115,7 @@ function SearchPage() {
                                 children: "No events found."
                             }, void 0, false, {
                                 fileName: "[project]/src/app/search/page.tsx",
-                                lineNumber: 108,
+                                lineNumber: 120,
                                 columnNumber: 13
                             }, this),
                             filtered.map((event)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -118,7 +128,7 @@ function SearchPage() {
                                                 children: event.title
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/search/page.tsx",
-                                                lineNumber: 118,
+                                                lineNumber: 129,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -128,7 +138,7 @@ function SearchPage() {
                                                         children: "Location:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/search/page.tsx",
-                                                        lineNumber: 122,
+                                                        lineNumber: 133,
                                                         columnNumber: 19
                                                     }, this),
                                                     " ",
@@ -136,7 +146,7 @@ function SearchPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/search/page.tsx",
-                                                lineNumber: 121,
+                                                lineNumber: 132,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -146,7 +156,7 @@ function SearchPage() {
                                                         children: "Date:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/search/page.tsx",
-                                                        lineNumber: 127,
+                                                        lineNumber: 138,
                                                         columnNumber: 19
                                                     }, this),
                                                     " ",
@@ -154,7 +164,7 @@ function SearchPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/search/page.tsx",
-                                                lineNumber: 126,
+                                                lineNumber: 137,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -164,7 +174,7 @@ function SearchPage() {
                                                         children: "Time:"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/search/page.tsx",
-                                                        lineNumber: 132,
+                                                        lineNumber: 143,
                                                         columnNumber: 19
                                                     }, this),
                                                     " ",
@@ -172,7 +182,7 @@ function SearchPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/search/page.tsx",
-                                                lineNumber: 131,
+                                                lineNumber: 142,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -181,12 +191,12 @@ function SearchPage() {
                                                     children: "Food:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/search/page.tsx",
-                                                    lineNumber: 137,
+                                                    lineNumber: 148,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/search/page.tsx",
-                                                lineNumber: 136,
+                                                lineNumber: 147,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -200,35 +210,35 @@ function SearchPage() {
                                                         ]
                                                     }, index, true, {
                                                         fileName: "[project]/src/app/search/page.tsx",
-                                                        lineNumber: 141,
+                                                        lineNumber: 152,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/search/page.tsx",
-                                                lineNumber: 139,
+                                                lineNumber: 150,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/search/page.tsx",
-                                        lineNumber: 115,
+                                        lineNumber: 127,
                                         columnNumber: 15
                                     }, this)
                                 }, event.id, false, {
                                     fileName: "[project]/src/app/search/page.tsx",
-                                    lineNumber: 114,
+                                    lineNumber: 126,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/search/page.tsx",
-                        lineNumber: 105,
+                        lineNumber: 118,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/search/page.tsx",
-                lineNumber: 82,
+                lineNumber: 95,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
@@ -238,33 +248,33 @@ function SearchPage() {
                         children: "Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative"
                     }, void 0, false, {
                         fileName: "[project]/src/app/search/page.tsx",
-                        lineNumber: 154,
+                        lineNumber: 164,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space"
                     }, void 0, false, {
                         fileName: "[project]/src/app/search/page.tsx",
-                        lineNumber: 157,
+                        lineNumber: 167,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "buspark@bu.edu"
                     }, void 0, false, {
                         fileName: "[project]/src/app/search/page.tsx",
-                        lineNumber: 158,
+                        lineNumber: 168,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/search/page.tsx",
-                lineNumber: 153,
+                lineNumber: 163,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/search/page.tsx",
-        lineNumber: 79,
+        lineNumber: 93,
         columnNumber: 5
     }, this);
 }
