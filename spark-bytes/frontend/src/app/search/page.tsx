@@ -88,7 +88,7 @@ export default function SearchPage() {
         <div className="flex w-full max-w-md mb-6">
           <input
             type="text"
-            placeholder="Search by name, food, location..."
+            placeholder="Search by name, location..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
