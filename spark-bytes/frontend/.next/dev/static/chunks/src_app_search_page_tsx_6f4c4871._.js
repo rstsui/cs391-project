@@ -31,11 +31,11 @@ function formatTime(timeString) {
 function SearchPage() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(29);
-    if ($[0] !== "7598a7f42d9de28bdfcaad8ebe534876a86dfa9403c319c12d569c28d980343c") {
+    if ($[0] !== "a34397b84fa2eb4dd73965d34696351a9dffd9b367566f45ba68a9c35dc258cb") {
         for(let $i = 0; $i < 29; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "7598a7f42d9de28bdfcaad8ebe534876a86dfa9403c319c12d569c28d980343c";
+        $[0] = "a34397b84fa2eb4dd73965d34696351a9dffd9b367566f45ba68a9c35dc258cb";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
@@ -128,7 +128,7 @@ function SearchPage() {
     if ($[9] !== query) {
         t7 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
             type: "text",
-            placeholder: "Search by name, food, location...",
+            placeholder: "Search by name, location...",
             value: query,
             onChange: t6,
             className: "flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"

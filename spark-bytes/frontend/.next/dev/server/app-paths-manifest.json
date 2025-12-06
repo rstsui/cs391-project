@@ -1,11 +1,6 @@
 {
-  "/admin/requests/page": "app/admin/requests/page.js",
-  "/create_event/page": "app/create_event/page.js",
-  "/events/[id]/page": "app/events/[id]/page.js",
-  "/log_out/page": "app/log_out/page.js",
-  "/login/page": "app/login/page.js",
+  "/admin/events/page": "app/admin/events/page.js",
   "/page": "app/page.js",
-  "/profile_page/page": "app/profile_page/page.js",
   "/profile_reserve/page": "app/profile_reserve/page.js",
   "/search/page": "app/search/page.js"
 }
