@@ -288,7 +288,7 @@ export default function AdminEventsPage() {
     Delete
   </button>
 
-  {/* ❌ REMOVED — teal See RSVPs button */}
+
 
   {/* NEW: Toggle inline RSVPs view */}
   <button
