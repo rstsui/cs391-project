@@ -25,11 +25,6 @@ export default function AdminEventsPage() {
   const [authorized, setAuthorized] = useState(false);
   const [events, setEvents] = useState<EventType[]>([]);
 
-  // RSVPs for admin's events
-  const [rsvps, setRsvps] = useState<any[]>([]);
-  // map to toggle showing RSVPs per event
-  const [showRsvpsMap, setShowRsvpsMap] = useState<Record<number, boolean>>({});
-
   // Edit modal state
   const [editingEvent, setEditingEvent] = useState<EventType | null>(null);
   const [editTitle, setEditTitle] = useState("");
@@ -53,24 +48,6 @@ export default function AdminEventsPage() {
 
     const eventsData = (data as EventType[]) || [];
     setEvents(eventsData);
-
-    // If there are events, load RSVPs for those event IDs
-    const eventIds = eventsData.map((e) => e.id);
-    if (eventIds.length > 0) {
-      const { data: rsvpData, error: rsvpError } = await supabase
-        .from("rsvps")
-        .select("*")
-        .in("event_id", eventIds);
-
-      if (rsvpError) {
-        console.error("Failed to load RSVPs:", rsvpError);
-        setRsvps([]);
-      } else {
-        setRsvps(rsvpData || []);
-      }
-    } else {
-      setRsvps([]);
-    }
   };
 
   // SECURITY CHECK: ADMIN ONLY
@@ -111,7 +88,6 @@ export default function AdminEventsPage() {
     } else {
       setEvents((prev) => prev.filter((e) => e.id !== eventId));
       // remove RSVPs for that event from local state
-      setRsvps((prev) => prev.filter((r) => r.event_id !== eventId));
     }
   };
 
@@ -231,11 +207,6 @@ export default function AdminEventsPage() {
     closeEditModal();
   };
 
-  // Toggle showing RSVPs for a given event
-  const toggleShowRsvps = (eventId: number) => {
-    setShowRsvpsMap((prev) => ({ ...prev, [eventId]: !prev[eventId] }));
-  };
-
   if (!authorized) return null;
 
   return (
@@ -288,40 +259,15 @@ export default function AdminEventsPage() {
     Delete
   </button>
 
-
-
-  {/* NEW: Toggle inline RSVPs view */}
-  <button
-    className="bg-gray-200 text-gray-800 px-3 py-1 rounded"
-    onClick={() => toggleShowRsvps(event.id)}
+    <button
+    className="bg-green-600 text-white px-3 py-1 rounded"
+    onClick={() => router.push(`/admin/events/${event.id}/attendees`)}
   >
-    {showRsvpsMap[event.id] ? "Hide RSVPs" : "Show RSVPs"}
+    View Attendees
   </button>
+
 </div>
 
-
-              {/* Inline RSVP list (admin view) */}
-              {showRsvpsMap[event.id] && (
-                <div className="mt-4 border-t pt-4">
-                  <h4 className="font-semibold mb-2">RSVPs</h4>
-
-                  {rsvps.filter((r) => r.event_id === event.id).length === 0 ? (
-                    <p className="text-sm text-gray-600">No RSVPs yet.</p>
-                  ) : (
-                    <div className="space-y-2">
-                      {rsvps
-                        .filter((r) => r.event_id === event.id)
-                        .map((r) => (
-                          <div key={r.id} className="bg-gray-50 p-3 rounded">
-                            <p className="text-sm"><strong>Email:</strong> {r.email}</p>
-                            <p className="text-sm"><strong>Food:</strong> {r.food_item}</p>
-                            <p className="text-sm"><strong>Qty:</strong> {r.quantity}</p>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           ))}
         </div>
