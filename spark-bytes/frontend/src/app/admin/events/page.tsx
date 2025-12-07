@@ -59,7 +59,7 @@ export default function AdminEventsPage() {
     if (eventIds.length > 0) {
       const { data: rsvpData, error: rsvpError } = await supabase
         .from("rsvps")
-        .select("*")
+        .select("*, rsvp_items(*)")
         .in("event_id", eventIds);
 
       if (rsvpError) {
@@ -103,17 +103,33 @@ export default function AdminEventsPage() {
 
   // Delete event
   const handleDelete = async (eventId: number) => {
-    if (!confirm("Are you sure you want to delete this event?")) return;
+    if (!confirm("Delete this event? This cannot be undone.")) return;
+    const { data: rsvpRows } = await supabase
+      .from("rsvps")
+      .select("id")
+      .eq("event_id", eventId);
+  
+    const rsvpIds = rsvpRows?.map(r => r.id) || [];
+
+    if (rsvpIds.length > 0) {
+      await supabase.from("rsvp_items").delete().in("rsvp_id", rsvpIds);
+    }
+
+    await supabase.from("rsvps").delete().eq("event_id", eventId);
 
     const { error } = await supabase.from("events").delete().eq("id", eventId);
+  
     if (error) {
+      console.error(error);
       alert("Failed to delete event");
-    } else {
-      setEvents((prev) => prev.filter((e) => e.id !== eventId));
-      // remove RSVPs for that event from local state
-      setRsvps((prev) => prev.filter((r) => r.event_id !== eventId));
+      return;
     }
+  
+    // 5. Update UI
+    setEvents(prev => prev.filter(e => e.id !== eventId));
+    setRsvps(prev => prev.filter(r => r.event_id !== eventId));
   };
+  
 
   // Cancel event (UPDATE status to cancelled)
   const handleCancel = async (eventId: number) => {
@@ -239,7 +255,7 @@ export default function AdminEventsPage() {
   if (!authorized) return null;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100">
       <section className="flex flex-col items-center px-4 py-8 flex-grow">
         <h1 className="text-3xl font-semibold mb-6">Admin: Your Events</h1>
 
@@ -313,8 +329,16 @@ export default function AdminEventsPage() {
                         .filter((r) => r.event_id === event.id)
                         .map((r) => (
                           <div key={r.id} className="bg-gray-50 p-3 rounded">
-                            <p className="text-sm"><strong>Email:</strong> {r.email}</p>
-                            <p className="text-sm"><strong>Food:</strong> {r.food_item}</p>
+                          <div className="mt-2">
+                            <strong>Items:</strong>
+                            <ul className="ml-4 list-disc">
+                              {r.rsvp_items?.map((it: any) => (
+                                <li key={it.id}>
+                                  {it.food_item} — {it.quantity}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                             <p className="text-sm"><strong>Qty:</strong> {r.quantity}</p>
                           </div>
                         ))}

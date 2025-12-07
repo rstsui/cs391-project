@@ -35,6 +35,7 @@ export default function AdminRequestsPage() {
         .from("profiles")
         .select("role")
         .eq("id", user.id)
+        
         .maybeSingle();
 
       if (!profile || profile.role !== "admin") {
