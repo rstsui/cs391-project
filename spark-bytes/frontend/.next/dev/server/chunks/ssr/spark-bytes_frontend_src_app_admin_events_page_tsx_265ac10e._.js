@@ -44,7 +44,7 @@ function AdminEventsPage() {
         // If there are events, load RSVPs for those event IDs
         const eventIds = eventsData.map((e)=>e.id);
         if (eventIds.length > 0) {
-            const { data: rsvpData, error: rsvpError } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvps").select("*").in("event_id", eventIds);
+            const { data: rsvpData, error: rsvpError } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvps").select("*, rsvp_items(*)").in("event_id", eventIds);
             if (rsvpError) {
                 console.error("Failed to load RSVPs:", rsvpError);
                 setRsvps([]);
@@ -77,15 +77,22 @@ function AdminEventsPage() {
     ]);
     // Delete event
     const handleDelete = async (eventId)=>{
-        if (!confirm("Are you sure you want to delete this event?")) return;
+        if (!confirm("Delete this event? This cannot be undone.")) return;
+        const { data: rsvpRows } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvps").select("id").eq("event_id", eventId);
+        const rsvpIds = rsvpRows?.map((r)=>r.id) || [];
+        if (rsvpIds.length > 0) {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvp_items").delete().in("rsvp_id", rsvpIds);
+        }
+        await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvps").delete().eq("event_id", eventId);
         const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("events").delete().eq("id", eventId);
         if (error) {
+            console.error(error);
             alert("Failed to delete event");
-        } else {
-            setEvents((prev)=>prev.filter((e)=>e.id !== eventId));
-            // remove RSVPs for that event from local state
-            setRsvps((prev)=>prev.filter((r)=>r.event_id !== eventId));
+            return;
         }
+        // 5. Update UI
+        setEvents((prev)=>prev.filter((e)=>e.id !== eventId));
+        setRsvps((prev)=>prev.filter((r)=>r.event_id !== eventId));
     };
     // Cancel event (UPDATE status to cancelled)
     const handleCancel = async (eventId)=>{
@@ -200,7 +207,7 @@ function AdminEventsPage() {
     };
     if (!authorized) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "min-h-screen bg-gray-100 flex flex-col",
+        className: "min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
                 className: "flex flex-col items-center px-4 py-8 flex-grow",
@@ -210,7 +217,7 @@ function AdminEventsPage() {
                         children: "Admin: Your Events"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                        lineNumber: 244,
+                        lineNumber: 260,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -221,7 +228,7 @@ function AdminEventsPage() {
                                 children: "You haven't created any events yet."
                             }, void 0, false, {
                                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                lineNumber: 248,
+                                lineNumber: 264,
                                 columnNumber: 13
                             }, this),
                             events.map((event)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -237,13 +244,13 @@ function AdminEventsPage() {
                                                     children: "(Cancelled)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 254,
+                                                    lineNumber: 270,
                                                     columnNumber: 64
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 253,
+                                            lineNumber: 269,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -252,7 +259,7 @@ function AdminEventsPage() {
                                                     children: "Date:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 258,
+                                                    lineNumber: 274,
                                                     columnNumber: 17
                                                 }, this),
                                                 " ",
@@ -260,7 +267,7 @@ function AdminEventsPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 257,
+                                            lineNumber: 273,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -269,7 +276,7 @@ function AdminEventsPage() {
                                                     children: "Time:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 261,
+                                                    lineNumber: 277,
                                                     columnNumber: 17
                                                 }, this),
                                                 " ",
@@ -277,7 +284,7 @@ function AdminEventsPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 260,
+                                            lineNumber: 276,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -286,7 +293,7 @@ function AdminEventsPage() {
                                                     children: "Location:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 264,
+                                                    lineNumber: 280,
                                                     columnNumber: 17
                                                 }, this),
                                                 " ",
@@ -294,7 +301,7 @@ function AdminEventsPage() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 263,
+                                            lineNumber: 279,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -303,12 +310,12 @@ function AdminEventsPage() {
                                                 children: "Food:"
                                             }, void 0, false, {
                                                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                lineNumber: 268,
+                                                lineNumber: 284,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 267,
+                                            lineNumber: 283,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -321,12 +328,12 @@ function AdminEventsPage() {
                                                     ]
                                                 }, i, true, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 272,
+                                                    lineNumber: 288,
                                                     columnNumber: 19
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 270,
+                                            lineNumber: 286,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -338,7 +345,7 @@ function AdminEventsPage() {
                                                     children: "Edit"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 279,
+                                                    lineNumber: 295,
                                                     columnNumber: 3
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -347,7 +354,7 @@ function AdminEventsPage() {
                                                     children: "Cancel"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 283,
+                                                    lineNumber: 299,
                                                     columnNumber: 3
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -356,7 +363,7 @@ function AdminEventsPage() {
                                                     children: "Delete"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 287,
+                                                    lineNumber: 303,
                                                     columnNumber: 3
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -365,13 +372,13 @@ function AdminEventsPage() {
                                                     children: showRsvpsMap[event.id] ? "Hide RSVPs" : "Show RSVPs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 294,
+                                                    lineNumber: 310,
                                                     columnNumber: 3
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 278,
+                                            lineNumber: 294,
                                             columnNumber: 15
                                         }, this),
                                         showRsvpsMap[event.id] && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -382,7 +389,7 @@ function AdminEventsPage() {
                                                     children: "RSVPs"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 306,
+                                                    lineNumber: 322,
                                                     columnNumber: 19
                                                 }, this),
                                                 rsvps.filter((r)=>r.event_id === event.id).length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -390,48 +397,46 @@ function AdminEventsPage() {
                                                     children: "No RSVPs yet."
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 309,
+                                                    lineNumber: 325,
                                                     columnNumber: 21
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "space-y-2",
                                                     children: rsvps.filter((r)=>r.event_id === event.id).map((r)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "bg-gray-50 p-3 rounded",
                                                             children: [
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                    className: "text-sm",
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "mt-2",
                                                                     children: [
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                                            children: "Email:"
+                                                                            children: "Items:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                                            lineNumber: 316,
-                                                                            columnNumber: 52
+                                                                            lineNumber: 333,
+                                                                            columnNumber: 29
                                                                         }, this),
-                                                                        " ",
-                                                                        r.email
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                                                            className: "ml-4 list-disc",
+                                                                            children: r.rsvp_items?.map((it)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                                                                    children: [
+                                                                                        it.food_item,
+                                                                                        " — ",
+                                                                                        it.quantity
+                                                                                    ]
+                                                                                }, it.id, true, {
+                                                                                    fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
+                                                                                    lineNumber: 336,
+                                                                                    columnNumber: 33
+                                                                                }, this))
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
+                                                                            lineNumber: 334,
+                                                                            columnNumber: 29
+                                                                        }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                                    lineNumber: 316,
-                                                                    columnNumber: 29
-                                                                }, this),
-                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                    className: "text-sm",
-                                                                    children: [
-                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
-                                                                            children: "Food:"
-                                                                        }, void 0, false, {
-                                                                            fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                                            lineNumber: 317,
-                                                                            columnNumber: 52
-                                                                        }, this),
-                                                                        " ",
-                                                                        r.food_item
-                                                                    ]
-                                                                }, void 0, true, {
-                                                                    fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                                    lineNumber: 317,
-                                                                    columnNumber: 29
+                                                                    lineNumber: 332,
+                                                                    columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                                     className: "text-sm",
@@ -440,7 +445,7 @@ function AdminEventsPage() {
                                                                             children: "Qty:"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                                            lineNumber: 318,
+                                                                            lineNumber: 342,
                                                                             columnNumber: 52
                                                                         }, this),
                                                                         " ",
@@ -448,42 +453,42 @@ function AdminEventsPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                                    lineNumber: 318,
+                                                                    lineNumber: 342,
                                                                     columnNumber: 29
                                                                 }, this)
                                                             ]
                                                         }, r.id, true, {
                                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                            lineNumber: 315,
+                                                            lineNumber: 331,
                                                             columnNumber: 27
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                    lineNumber: 311,
+                                                    lineNumber: 327,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 305,
+                                            lineNumber: 321,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, event.id, true, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                    lineNumber: 252,
+                                    lineNumber: 268,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                        lineNumber: 246,
+                        lineNumber: 262,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                lineNumber: 243,
+                lineNumber: 259,
                 columnNumber: 7
             }, this),
             editingEvent && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -496,7 +501,7 @@ function AdminEventsPage() {
                             children: "Edit Event"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 334,
+                            lineNumber: 358,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -504,7 +509,7 @@ function AdminEventsPage() {
                             children: "Title"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 337,
+                            lineNumber: 361,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -513,7 +518,7 @@ function AdminEventsPage() {
                             className: "border w-full px-3 py-2 rounded mb-3"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 338,
+                            lineNumber: 362,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -526,7 +531,7 @@ function AdminEventsPage() {
                                             children: "Date"
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 343,
+                                            lineNumber: 367,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -536,13 +541,13 @@ function AdminEventsPage() {
                                             className: "border w-full px-3 py-2 rounded mb-3"
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 344,
+                                            lineNumber: 368,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                    lineNumber: 342,
+                                    lineNumber: 366,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -552,7 +557,7 @@ function AdminEventsPage() {
                                             children: "Time"
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 349,
+                                            lineNumber: 373,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -562,19 +567,19 @@ function AdminEventsPage() {
                                             className: "border w-full px-3 py-2 rounded mb-3"
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                            lineNumber: 350,
+                                            lineNumber: 374,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                    lineNumber: 348,
+                                    lineNumber: 372,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 340,
+                            lineNumber: 364,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -582,7 +587,7 @@ function AdminEventsPage() {
                             children: "Location"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 355,
+                            lineNumber: 379,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -591,7 +596,7 @@ function AdminEventsPage() {
                             className: "border w-full px-3 py-2 rounded mb-3"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 356,
+                            lineNumber: 380,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -599,7 +604,7 @@ function AdminEventsPage() {
                             children: "Food Items"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 359,
+                            lineNumber: 383,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -615,7 +620,7 @@ function AdminEventsPage() {
                                                 className: "border px-3 py-2 rounded w-2/3"
                                             }, void 0, false, {
                                                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                lineNumber: 363,
+                                                lineNumber: 387,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -625,7 +630,7 @@ function AdminEventsPage() {
                                                 className: "border px-3 py-2 rounded w-1/3"
                                             }, void 0, false, {
                                                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                lineNumber: 369,
+                                                lineNumber: 393,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -635,13 +640,13 @@ function AdminEventsPage() {
                                                 children: "✕"
                                             }, void 0, false, {
                                                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                                lineNumber: 375,
+                                                lineNumber: 399,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, index, true, {
                                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                        lineNumber: 362,
+                                        lineNumber: 386,
                                         columnNumber: 17
                                     }, this)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -651,13 +656,13 @@ function AdminEventsPage() {
                                     children: "+ Add food item"
                                 }, void 0, false, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                    lineNumber: 381,
+                                    lineNumber: 405,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 360,
+                            lineNumber: 384,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -670,7 +675,7 @@ function AdminEventsPage() {
                                     children: "Close"
                                 }, void 0, false, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                    lineNumber: 388,
+                                    lineNumber: 412,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -680,24 +685,24 @@ function AdminEventsPage() {
                                     children: "Save Changes"
                                 }, void 0, false, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                                    lineNumber: 391,
+                                    lineNumber: 415,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                            lineNumber: 387,
+                            lineNumber: 411,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                    lineNumber: 333,
+                    lineNumber: 357,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                lineNumber: 332,
+                lineNumber: 356,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
@@ -707,33 +712,33 @@ function AdminEventsPage() {
                         children: "Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                        lineNumber: 401,
+                        lineNumber: 425,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                        lineNumber: 402,
+                        lineNumber: 426,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "buspark@bu.edu"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                        lineNumber: 403,
+                        lineNumber: 427,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-                lineNumber: 400,
+                lineNumber: 424,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
-        lineNumber: 242,
+        lineNumber: 258,
         columnNumber: 5
     }, this);
 }

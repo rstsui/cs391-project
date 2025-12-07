@@ -36,6 +36,8 @@ const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$by
 supabase.auth.onAuthStateChange((event, session)=>{
     console.log("[Auth Event]", event);
     console.log("[Session]", session);
+    console.log("URL:", ("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"));
+    console.log("KEY:", ("TURBOPACK compile-time value", "sb_publishable_-WCwrd60dGgq8xVeFhA8Gw_QT__pLHj"));
 });
 }),
 "[project]/spark-bytes/frontend/src/lib/useSupabaseSession.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {
@@ -155,12 +157,21 @@ function NavbarClient() {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                href: "/profile_reserve",
-                                className: isActive("/profile_reserve"),
+                                href: role === "admin" ? "/admin/events" : "/request_access",
+                                className: isActive(role === "admin" ? "/admin/events" : "/request_access"),
                                 children: "My Events"
                             }, void 0, false, {
                                 fileName: "[project]/spark-bytes/frontend/src/app/navbar-client.tsx",
-                                lineNumber: 65,
+                                lineNumber: 63,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                href: "/profile_reserve",
+                                className: isActive("/profile_reserve"),
+                                children: "My Reservations"
+                            }, void 0, false, {
+                                fileName: "[project]/spark-bytes/frontend/src/app/navbar-client.tsx",
+                                lineNumber: 71,
                                 columnNumber: 13
                             }, this)
                         ]
@@ -171,7 +182,7 @@ function NavbarClient() {
                         children: "Profile"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/navbar-client.tsx",
-                        lineNumber: 74,
+                        lineNumber: 80,
                         columnNumber: 9
                     }, this),
                     session && role === "admin" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -180,7 +191,7 @@ function NavbarClient() {
                         children: "Admin Requests"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/navbar-client.tsx",
-                        lineNumber: 83,
+                        lineNumber: 89,
                         columnNumber: 11
                     }, this),
                     session ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -189,7 +200,7 @@ function NavbarClient() {
                         children: "Logout"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/navbar-client.tsx",
-                        lineNumber: 93,
+                        lineNumber: 99,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         href: "/login",
@@ -197,7 +208,7 @@ function NavbarClient() {
                         children: "Login"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/navbar-client.tsx",
-                        lineNumber: 97,
+                        lineNumber: 103,
                         columnNumber: 11
                     }, this)
                 ]

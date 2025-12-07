@@ -31,11 +31,11 @@ function formatTime(timeString) {
 function SearchPage() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(29);
-    if ($[0] !== "a34397b84fa2eb4dd73965d34696351a9dffd9b367566f45ba68a9c35dc258cb") {
+    if ($[0] !== "5e5f19c7e2cf6d50a6c3517645573ec3f0f89cb5c4f57ddfc378495615a9b246") {
         for(let $i = 0; $i < 29; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "a34397b84fa2eb4dd73965d34696351a9dffd9b367566f45ba68a9c35dc258cb";
+        $[0] = "5e5f19c7e2cf6d50a6c3517645573ec3f0f89cb5c4f57ddfc378495615a9b246";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
@@ -85,6 +85,7 @@ function SearchPage() {
     if ($[5] !== query) {
         t4 = ({
             "SearchPage[handleSearch]": async ()=>{
+                const lower = query.toLowerCase();
                 const { data: data_0, error: error_0 } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("events").select("*").or(`title.ilike.%${query}%,location.ilike.%${query}%`).order("created_at", {
                     ascending: false
                 });
@@ -92,7 +93,17 @@ function SearchPage() {
                     console.error(error_0);
                     return;
                 }
-                setFiltered(data_0 || []);
+                const filteredData = (data_0 || []).filter({
+                    "SearchPage[handleSearch > (anonymous)()]": (event)=>{
+                        const titleMatch = event.title?.toLowerCase().includes(lower);
+                        const locationMatch = event.location?.toLowerCase().includes(lower);
+                        const foodMatch = event.food_items?.some({
+                            "SearchPage[handleSearch > (anonymous)() > (anonymous)()]": (item)=>item.name?.toLowerCase().includes(lower)
+                        }["SearchPage[handleSearch > (anonymous)() > (anonymous)()]"]);
+                        return titleMatch || locationMatch || foodMatch;
+                    }
+                }["SearchPage[handleSearch > (anonymous)()]"]);
+                setFiltered(filteredData);
             }
         })["SearchPage[handleSearch]"];
         $[5] = query;
@@ -108,7 +119,7 @@ function SearchPage() {
             children: "Search Spark!Bytes Events"
         }, void 0, false, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 111,
+            lineNumber: 122,
             columnNumber: 10
         }, this);
         $[7] = t5;
@@ -134,7 +145,7 @@ function SearchPage() {
             className: "flex-grow border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
         }, void 0, false, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 127,
+            lineNumber: 138,
             columnNumber: 10
         }, this);
         $[9] = query;
@@ -150,7 +161,7 @@ function SearchPage() {
             children: "Search"
         }, void 0, false, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 135,
+            lineNumber: 146,
             columnNumber: 10
         }, this);
         $[11] = handleSearch;
@@ -168,7 +179,7 @@ function SearchPage() {
             ]
         }, void 0, true, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 143,
+            lineNumber: 154,
             columnNumber: 10
         }, this);
         $[13] = t7;
@@ -184,7 +195,7 @@ function SearchPage() {
             children: "No events found."
         }, void 0, false, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 152,
+            lineNumber: 163,
             columnNumber: 36
         }, this);
         $[16] = filtered.length;
@@ -210,7 +221,7 @@ function SearchPage() {
             ]
         }, void 0, true, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 168,
+            lineNumber: 179,
             columnNumber: 11
         }, this);
         $[20] = t10;
@@ -230,7 +241,7 @@ function SearchPage() {
             ]
         }, void 0, true, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 177,
+            lineNumber: 188,
             columnNumber: 11
         }, this);
         $[23] = t12;
@@ -248,27 +259,27 @@ function SearchPage() {
                     children: "Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative"
                 }, void 0, false, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 186,
+                    lineNumber: 197,
                     columnNumber: 89
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     children: "665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space"
                 }, void 0, false, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 186,
+                    lineNumber: 197,
                     columnNumber: 184
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     children: "buspark@bu.edu"
                 }, void 0, false, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 186,
+                    lineNumber: 197,
                     columnNumber: 254
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 186,
+            lineNumber: 197,
             columnNumber: 11
         }, this);
         $[26] = t14;
@@ -285,7 +296,7 @@ function SearchPage() {
             ]
         }, void 0, true, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 193,
+            lineNumber: 204,
             columnNumber: 11
         }, this);
         $[27] = t13;
@@ -297,19 +308,19 @@ function SearchPage() {
 }
 _s(SearchPage, "nw4Z+lz/QJvo+Z+/vWs2i++Mk0A=");
 _c = SearchPage;
-function _SearchPageFilteredMap(event) {
+function _SearchPageFilteredMap(event_0) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-        href: `/events/${event.id}`,
+        href: `/events/${event_0.id}`,
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "bg-white shadow-md border border-gray-300 rounded-xl p-5 cursor-pointer hover:shadow-lg transition",
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                     className: "text-xl font-semibold mb-2",
-                    children: event.title
+                    children: event_0.title
                 }, void 0, false, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 202,
-                    columnNumber: 176
+                    lineNumber: 213,
+                    columnNumber: 180
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "text-gray-700",
@@ -318,16 +329,16 @@ function _SearchPageFilteredMap(event) {
                             children: "Location:"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                            lineNumber: 202,
-                            columnNumber: 266
+                            lineNumber: 213,
+                            columnNumber: 272
                         }, this),
                         " ",
-                        event.location
+                        event_0.location
                     ]
                 }, void 0, true, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 202,
-                    columnNumber: 237
+                    lineNumber: 213,
+                    columnNumber: 243
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "text-gray-700",
@@ -336,16 +347,16 @@ function _SearchPageFilteredMap(event) {
                             children: "Date:"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                            lineNumber: 202,
-                            columnNumber: 342
+                            lineNumber: 213,
+                            columnNumber: 350
                         }, this),
                         " ",
-                        event.event_date
+                        event_0.event_date
                     ]
                 }, void 0, true, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 202,
-                    columnNumber: 313
+                    lineNumber: 213,
+                    columnNumber: 321
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "text-gray-700",
@@ -354,16 +365,16 @@ function _SearchPageFilteredMap(event) {
                             children: "Time:"
                         }, void 0, false, {
                             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                            lineNumber: 202,
-                            columnNumber: 416
+                            lineNumber: 213,
+                            columnNumber: 426
                         }, this),
                         " ",
-                        formatTime(event.event_time)
+                        formatTime(event_0.event_time)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 202,
-                    columnNumber: 387
+                    lineNumber: 213,
+                    columnNumber: 397
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                     className: "text-gray-700",
@@ -371,45 +382,45 @@ function _SearchPageFilteredMap(event) {
                         children: "Food:"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                        lineNumber: 202,
-                        columnNumber: 502
+                        lineNumber: 213,
+                        columnNumber: 514
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 202,
-                    columnNumber: 473
+                    lineNumber: 213,
+                    columnNumber: 485
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                     className: "ml-4 list-disc text-gray-700",
-                    children: event.food_items?.map(_SearchPageFilteredMapAnonymous)
+                    children: event_0.food_items?.map(_SearchPageFilteredMapAnonymous)
                 }, void 0, false, {
                     fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-                    lineNumber: 202,
-                    columnNumber: 528
+                    lineNumber: 213,
+                    columnNumber: 540
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-            lineNumber: 202,
-            columnNumber: 60
+            lineNumber: 213,
+            columnNumber: 64
         }, this)
-    }, event.id, false, {
+    }, event_0.id, false, {
         fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-        lineNumber: 202,
+        lineNumber: 213,
         columnNumber: 10
     }, this);
 }
-function _SearchPageFilteredMapAnonymous(item, index) {
+function _SearchPageFilteredMapAnonymous(item_0, index) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
         children: [
-            item.name,
+            item_0.name,
             " — ",
-            item.quantity,
+            item_0.quantity,
             " left"
         ]
     }, index, true, {
         fileName: "[project]/spark-bytes/frontend/src/app/search/page.tsx",
-        lineNumber: 205,
+        lineNumber: 216,
         columnNumber: 10
     }, this);
 }

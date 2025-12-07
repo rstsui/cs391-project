@@ -60,13 +60,19 @@ export default function NavbarClient() {
             >
               Create Event
             </Link>
+            <Link
+              href={role === "admin" ? "/admin/events" : "/request_access"}
+              className={isActive(role === "admin" ? "/admin/events" : "/request_access")}
+            >
+              My Events
+            </Link>
 
 
             <Link
               href="/profile_reserve"
               className={isActive("/profile_reserve")}
             >
-              My Events
+              My Reservations
             </Link>
           </>
         )}

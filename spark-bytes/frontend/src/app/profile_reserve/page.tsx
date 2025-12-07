@@ -294,7 +294,7 @@ const handleEditSubmit = async () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100">
       <main className="flex-1 px-10 py-16 max-w-6xl mx-auto w-full">
-        <h1 className="text-3xl font-semibold text-center mb-2">My Events</h1>
+        <h1 className="text-3xl font-semibold text-center mb-2">My Reservations</h1>
         <p className="text-lg text-center mb-12">Food pickups you have reserved</p>
 
         <section className="flex flex-wrap justify-center gap-6 px-8 pb-12 mt-10">
