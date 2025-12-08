@@ -1,5 +1,5 @@
 # tests/test_rsvp.py
-
+from datetime import datetime, timezone
 import pytest
 from fastapi.testclient import TestClient
 from main import app
@@ -26,6 +26,10 @@ class FakeRSVPTable:
         for d in data:
             row = d.copy()
             row.setdefault("id", self._auto_id)
+            
+            # FIX: Add the timestamp that Supabase would normally add!
+            row.setdefault("created_at", datetime.now(timezone.utc).isoformat())
+            
             self._auto_id += 1
             self.rows.append(row)
             new_rows.append(row)
