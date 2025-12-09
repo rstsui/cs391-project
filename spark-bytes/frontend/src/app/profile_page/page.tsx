@@ -2,43 +2,61 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useAuthGuard } from "@/lib/useAuthGuard";
 
 export default function ProfilePage() {
+  const { loading, user } = useAuthGuard(); // login + redirect to /login if needed
+
   const [profile, setProfile] = useState<any>(null);
-  const [authUser, setAuthUser] = useState<any>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     async function loadProfile() {
-      const { data: authData } = await supabase.auth.getUser();
-      if (!authData.user) return;
+      if (!user) return;
 
-      setAuthUser(authData.user);
+      setProfileLoading(true);
 
-      const { data: profileData } = await supabase
+      const { data: profileData, error } = await supabase
         .from("profiles")
         .select("email, role")
-        .eq("id", authData.user.id)
+        .eq("id", user.id)
         .single();
 
-      setProfile(profileData);
+      if (error) {
+        console.error("Error loading profile:", error);
+        setProfile(null);
+      } else {
+        setProfile(profileData);
+      }
+
+      setProfileLoading(false);
     }
 
     loadProfile();
-  }, []);
+  }, [user]);
 
-  if (!profile || !authUser) return null;
+  // While we're checking auth or fetching the profile
+  if (loading || profileLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg">
+        Loading profile…
+      </div>
+    );
+  }
+
+  // useAuthGuard has already redirected if not logged in
+  if (!user || !profile) return null;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100 px-6 py-16">
       <div className="max-w-xl mx-auto bg-white border border-gray-200 shadow-lg rounded-2xl p-10">
-        
         {/* HEADER */}
         <h1 className="text-2xl font-bold text-center mb-2">
           {profile.email}
         </h1>
 
         <p className="text-center text-gray-500 mb-1">
-          Member since {new Date(authUser.created_at).toLocaleDateString()}
+          Member since {new Date(user.created_at).toLocaleDateString()}
         </p>
 
         <div className="flex justify-center mt-3">
@@ -55,9 +73,7 @@ export default function ProfilePage() {
 
         {/* ABOUT */}
         <div className="mt-8 text-center text-gray-700">
-          <p>
-            Welcome to Spark!Bytes — helping reduce food waste across campus.
-          </p>
+          <p>Welcome to Spark!Bytes — helping reduce food waste across campus.</p>
         </div>
 
         {/* ACTION BUTTONS */}
@@ -91,7 +107,10 @@ export default function ProfilePage() {
 
       {/* FOOTER */}
       <footer className="bg-black text-white text-center text-sm py-6 px-4 mt-20">
-        <p>Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative</p>
+        <p>
+          Boston University Center of Computing & Data Sciences: Duan Family
+          Spark! Initiative
+        </p>
         <p>665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space</p>
         <p>buspark@bu.edu</p>
       </footer>
