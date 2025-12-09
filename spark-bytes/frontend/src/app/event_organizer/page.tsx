@@ -4,13 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useAdminGuard } from "@/lib/useAdminGuard";
 
 export default function EventOrganizer() {
+  const { loading, authorized } = useAdminGuard();
+
   const [rsvps, setRsvps] = useState<
-  { name: string; food_item: string | null; quantity: number }[]
-    >([]);
+    { name: string; food_item: string | null; quantity: number }[]
+  >([]);
 
   useEffect(() => {
+    if (!authorized) return;
+
     async function loadRSVPs() {
       const { data, error } = await supabase
         .from("rsvps")
@@ -19,19 +24,25 @@ export default function EventOrganizer() {
       if (error) {
         console.error("Error loading RSVPs:", error);
       } else {
-        setRsvps(data);
+        setRsvps(data || []);
       }
     }
 
     loadRSVPs();
-  }, []);
+  }, [authorized]);
+
+  if (loading) {
+    return (
+      <div className="p-10 text-center">
+        Checking access…
+      </div>
+    );
+  }
+
+  if (!authorized) return null;
 
   return (
     <div className="min-h-screen flex flex-col">
-      
-      
-
-      {/* Main Section */}
       <section className="flex-grow px-8 py-12">
         <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
           Event Sign-Up Overview
@@ -68,7 +79,6 @@ export default function EventOrganizer() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-black text-white text-center text-sm py-6 px-4 mt-auto">
         <p>Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative</p>
         <p>665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space</p>
