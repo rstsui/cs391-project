@@ -32,12 +32,12 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/@supabase/supabase-js/dist/module/index.js [app-ssr] (ecmascript) <locals>");
 ;
-const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"), ("TURBOPACK compile-time value", "sb_publishable_-WCwrd60dGgq8xVeFhA8Gw_QT__pLHj"));
+const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"), ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkaHFsY2RxamNqYXhiZ2htdnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjY3MzEsImV4cCI6MjA3Nzk0MjczMX0.hPTK6Ak0OOZlSNAomSXkDGDn7UFUd2Q1lk5i_vnNcEQ"));
 supabase.auth.onAuthStateChange((event, session)=>{
     console.log("[Auth Event]", event);
     console.log("[Session]", session);
     console.log("URL:", ("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"));
-    console.log("KEY:", ("TURBOPACK compile-time value", "sb_publishable_-WCwrd60dGgq8xVeFhA8Gw_QT__pLHj"));
+    console.log("KEY:", ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkaHFsY2RxamNqYXhiZ2htdnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjY3MzEsImV4cCI6MjA3Nzk0MjczMX0.hPTK6Ak0OOZlSNAomSXkDGDn7UFUd2Q1lk5i_vnNcEQ"));
 });
 }),
 "[project]/spark-bytes/frontend/src/lib/useSupabaseSession.ts [app-ssr] (ecmascript)", ((__turbopack_context__) => {

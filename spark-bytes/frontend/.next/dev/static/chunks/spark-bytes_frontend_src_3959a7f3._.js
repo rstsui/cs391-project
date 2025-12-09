@@ -9,12 +9,12 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/@supabase/supabase-js/dist/module/index.js [app-client] (ecmascript) <locals>");
 ;
-const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"), ("TURBOPACK compile-time value", "sb_publishable_-WCwrd60dGgq8xVeFhA8Gw_QT__pLHj"));
+const supabase = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f40$supabase$2f$supabase$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createClient"])(("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"), ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkaHFsY2RxamNqYXhiZ2htdnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjY3MzEsImV4cCI6MjA3Nzk0MjczMX0.hPTK6Ak0OOZlSNAomSXkDGDn7UFUd2Q1lk5i_vnNcEQ"));
 supabase.auth.onAuthStateChange((event, session)=>{
     console.log("[Auth Event]", event);
     console.log("[Session]", session);
     console.log("URL:", ("TURBOPACK compile-time value", "https://fdhqlcdqjcjaxbghmvxu.supabase.co"));
-    console.log("KEY:", ("TURBOPACK compile-time value", "sb_publishable_-WCwrd60dGgq8xVeFhA8Gw_QT__pLHj"));
+    console.log("KEY:", ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkaHFsY2RxamNqYXhiZ2htdnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzNjY3MzEsImV4cCI6MjA3Nzk0MjczMX0.hPTK6Ak0OOZlSNAomSXkDGDn7UFUd2Q1lk5i_vnNcEQ"));
 });
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
@@ -38,11 +38,11 @@ var _s = __turbopack_context__.k.signature();
 function useSupabaseSession() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(3);
-    if ($[0] !== "c01e711cc7285af6ab37211dbff4bccfce22752e056031fc9c1c6f0ad95246da") {
+    if ($[0] !== "ae9ef01dabe1230faf601a90732c9e570b1ecc8085961518c678478f7200f66c") {
         for(let $i = 0; $i < 3; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "c01e711cc7285af6ab37211dbff4bccfce22752e056031fc9c1c6f0ad95246da";
+        $[0] = "ae9ef01dabe1230faf601a90732c9e570b1ecc8085961518c678478f7200f66c";
     }
     const [session, setSession] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     let t0;
@@ -106,11 +106,11 @@ var _s = __turbopack_context__.k.signature();
 function NavbarClient() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(35);
-    if ($[0] !== "cc80764126900359995a844bc8e82dcc204e4f963a4740b0c02b961fd130293e") {
+    if ($[0] !== "bfff32af24f94d17c83de19b9944fdf42069e8de9dd380a0d18a77cec322254c") {
         for(let $i = 0; $i < 35; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "cc80764126900359995a844bc8e82dcc204e4f963a4740b0c02b961fd130293e";
+        $[0] = "bfff32af24f94d17c83de19b9944fdf42069e8de9dd380a0d18a77cec322254c";
     }
     const session = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$useSupabaseSession$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useSupabaseSession"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();

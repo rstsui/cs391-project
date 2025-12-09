@@ -21,11 +21,11 @@ var _s = __turbopack_context__.k.signature();
 function AdminEventsPage() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(49);
-    if ($[0] !== "62329c973967442b1ed75effc6fc0e42b5fd3aebd97a066b3c1551873620e71b") {
+    if ($[0] !== "020454ac38df09a44eb42cd03af73cdf57b455a42ad2e11d89ae0ab49496ccc6") {
         for(let $i = 0; $i < 49; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "62329c973967442b1ed75effc6fc0e42b5fd3aebd97a066b3c1551873620e71b";
+        $[0] = "020454ac38df09a44eb42cd03af73cdf57b455a42ad2e11d89ae0ab49496ccc6";
     }
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [authorized, setAuthorized] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
