@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { useAdminGuard } from "@/lib/useAdminGuard";
 
 type FoodItem = {
   name: string;
-  quantity: string; // keep as string because your DB stores jsonb; convert where needed
+  quantity: string;
 };
 
 type EventType = {
@@ -21,12 +21,13 @@ type EventType = {
 };
 
 export default function AdminEventsPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
+  const { loading, authorized } = useAdminGuard();
+
   const [events, setEvents] = useState<EventType[]>([]);
 
   // RSVPs for admin's events
   const [rsvps, setRsvps] = useState<any[]>([]);
+
   // map to toggle showing RSVPs per event
   const [showRsvpsMap, setShowRsvpsMap] = useState<Record<number, boolean>>({});
 
@@ -73,43 +74,31 @@ export default function AdminEventsPage() {
     }
   };
 
-  // SECURITY CHECK: ADMIN ONLY
+  // After admin guard passes, fetch the current user + events
   useEffect(() => {
-    async function checkRole() {
-      const { data: { user } } = await supabase.auth.getUser();
+    async function load() {
+      if (!authorized) return;
 
-      if (!user) {
-        router.push("/login");
-        return;
-      }
+      const { data: authData } = await supabase.auth.getUser();
+      const user = authData?.user;
+      if (!user) return; // should not happen if authorized, but just in case
 
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-
-      if (profile?.role !== "admin") {
-        router.push("/request_access");
-        return;
-      }
-
-      setAuthorized(true);
-      loadAdminEvents(user.id);
+      await loadAdminEvents(user.id);
     }
 
-    checkRole();
-  }, [router]);
+    load();
+  }, [authorized]);
 
   // Delete event
   const handleDelete = async (eventId: number) => {
     if (!confirm("Delete this event? This cannot be undone.")) return;
+
     const { data: rsvpRows } = await supabase
       .from("rsvps")
       .select("id")
       .eq("event_id", eventId);
-  
-    const rsvpIds = rsvpRows?.map(r => r.id) || [];
+
+    const rsvpIds = rsvpRows?.map((r) => r.id) || [];
 
     if (rsvpIds.length > 0) {
       await supabase.from("rsvp_items").delete().in("rsvp_id", rsvpIds);
@@ -118,18 +107,17 @@ export default function AdminEventsPage() {
     await supabase.from("rsvps").delete().eq("event_id", eventId);
 
     const { error } = await supabase.from("events").delete().eq("id", eventId);
-  
+
     if (error) {
       console.error(error);
       alert("Failed to delete event");
       return;
     }
-  
-    // 5. Update UI
-    setEvents(prev => prev.filter(e => e.id !== eventId));
-    setRsvps(prev => prev.filter(r => r.event_id !== eventId));
+
+    // Update UI
+    setEvents((prev) => prev.filter((e) => e.id !== eventId));
+    setRsvps((prev) => prev.filter((r) => r.event_id !== eventId));
   };
-  
 
   // Cancel event (UPDATE status to cancelled)
   const handleCancel = async (eventId: number) => {
@@ -146,7 +134,9 @@ export default function AdminEventsPage() {
     }
 
     // Update UI immediately
-    setEvents((prev) => prev.map((e) => (e.id === eventId ? { ...e, status: "cancelled" } : e)));
+    setEvents((prev) =>
+      prev.map((e) => (e.id === eventId ? { ...e, status: "cancelled" } : e))
+    );
   };
 
   // Format time to AM/PM
@@ -168,8 +158,14 @@ export default function AdminEventsPage() {
     setEditLocation(event.location || "");
     setEditDate(event.event_date || "");
     setEditTime(event.event_time || "");
+    
     // Deep copy food items to avoid mutating state directly
-    setEditFoodItems((event.food_items || []).map((f) => ({ name: f.name, quantity: String(f.quantity) })));
+    setEditFoodItems(
+      (event.food_items || []).map((f) => ({
+        name: f.name,
+        quantity: String(f.quantity),
+      }))
+    );
   };
 
   const closeEditModal = () => {
@@ -181,8 +177,14 @@ export default function AdminEventsPage() {
     setEditFoodItems([]);
   };
 
-  const updateFoodItem = (index: number, field: "name" | "quantity", value: string) => {
-    setEditFoodItems((prev) => prev.map((it, i) => (i === index ? { ...it, [field]: value } : it)));
+  const updateFoodItem = (
+    index: number,
+    field: "name" | "quantity",
+    value: string
+  ) => {
+    setEditFoodItems((prev) =>
+      prev.map((it, i) => (i === index ? { ...it, [field]: value } : it))
+    );
   };
 
   const addFoodItem = () => {
@@ -252,6 +254,16 @@ export default function AdminEventsPage() {
     setShowRsvpsMap((prev) => ({ ...prev, [eventId]: !prev[eventId] }));
   };
 
+  // Guard UI
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg">
+        Checking access...
+      </div>
+    );
+  }
+
+  // useAdminGuard already redirected if not admin
   if (!authorized) return null;
 
   return (
@@ -261,13 +273,21 @@ export default function AdminEventsPage() {
 
         <div className="grid grid-cols-1 gap-6 w-full max-w-4xl">
           {events.length === 0 && (
-            <p className="text-gray-600 text-center w-full">You haven&apos;t created any events yet.</p>
+            <p className="text-gray-600 text-center w-full">
+              You haven&apos;t created any events yet.
+            </p>
           )}
 
           {events.map((event) => (
-            <div key={event.id} className="bg-white shadow-md border rounded-xl p-5">
+            <div
+              key={event.id}
+              className="bg-white shadow-md border rounded-xl p-5"
+            >
               <h3 className="text-xl font-semibold mb-2">
-                {event.title} {event.status === "cancelled" && <span className="text-red-600">(Cancelled)</span>}
+                {event.title}{" "}
+                {event.status === "cancelled" && (
+                  <span className="text-red-600">(Cancelled)</span>
+                )}
               </h3>
 
               <p>
@@ -292,29 +312,35 @@ export default function AdminEventsPage() {
               </ul>
 
               <div className="mt-4 flex gap-2">
-  <button className="bg-blue-600 text-white px-3 py-1 rounded" onClick={() => openEditModal(event)}>
-    Edit
-  </button>
+                <button
+                  className="bg-blue-600 text-white px-3 py-1 rounded"
+                  onClick={() => openEditModal(event)}
+                >
+                  Edit
+                </button>
 
-  <button className="bg-yellow-600 text-white px-3 py-1 rounded" onClick={() => handleCancel(event.id)}>
-    Cancel
-  </button>
+                <button
+                  className="bg-yellow-600 text-white px-3 py-1 rounded"
+                  onClick={() => handleCancel(event.id)}
+                >
+                  Cancel
+                </button>
 
-  <button className="bg-red-600 text-white px-3 py-1 rounded" onClick={() => handleDelete(event.id)}>
-    Delete
-  </button>
+                <button
+                  className="bg-red-600 text-white px-3 py-1 rounded"
+                  onClick={() => handleDelete(event.id)}
+                >
+                  Delete
+                </button>
 
-
-
-  {/* NEW: Toggle inline RSVPs view */}
-  <button
-    className="bg-gray-200 text-gray-800 px-3 py-1 rounded"
-    onClick={() => toggleShowRsvps(event.id)}
-  >
-    {showRsvpsMap[event.id] ? "Hide RSVPs" : "Show RSVPs"}
-  </button>
-</div>
-
+                {/* Toggle inline RSVPs view */}
+                <button
+                  className="bg-gray-200 text-gray-800 px-3 py-1 rounded"
+                  onClick={() => toggleShowRsvps(event.id)}
+                >
+                  {showRsvpsMap[event.id] ? "Hide RSVPs" : "Show RSVPs"}
+                </button>
+              </div>
 
               {/* Inline RSVP list (admin view) */}
               {showRsvpsMap[event.id] && (
@@ -329,17 +355,19 @@ export default function AdminEventsPage() {
                         .filter((r) => r.event_id === event.id)
                         .map((r) => (
                           <div key={r.id} className="bg-gray-50 p-3 rounded">
-                          <div className="mt-2">
-                            <strong>Items:</strong>
-                            <ul className="ml-4 list-disc">
-                              {r.rsvp_items?.map((it: any) => (
-                                <li key={it.id}>
-                                  {it.food_item} — {it.quantity}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                            <p className="text-sm"><strong>Qty:</strong> {r.quantity}</p>
+                            <div className="mt-2">
+                              <strong>Items:</strong>
+                              <ul className="ml-4 list-disc">
+                                {r.rsvp_items?.map((it: any) => (
+                                  <li key={it.id}>
+                                    {it.food_item} — {it.quantity}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <p className="text-sm">
+                              <strong>Qty:</strong> {r.quantity}
+                            </p>
                           </div>
                         ))}
                     </div>
@@ -359,60 +387,100 @@ export default function AdminEventsPage() {
 
             {/* Title */}
             <label className="block text-sm font-medium">Title</label>
-            <input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} className="border w-full px-3 py-2 rounded mb-3" />
+            <input
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              className="border w-full px-3 py-2 rounded mb-3"
+            />
 
             <div className="grid grid-cols-2 gap-4">
               {/* Date */}
               <div>
                 <label className="block text-sm font-medium">Date</label>
-                <input type="date" value={editDate} onChange={(e) => setEditDate(e.target.value)} className="border w-full px-3 py-2 rounded mb-3" />
+                <input
+                  type="date"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                  className="border w-full px-3 py-2 rounded mb-3"
+                />
               </div>
 
               {/* Time */}
               <div>
                 <label className="block text-sm font-medium">Time</label>
-                <input type="time" value={editTime} onChange={(e) => setEditTime(e.target.value)} className="border w-full px-3 py-2 rounded mb-3" />
+                <input
+                  type="time"
+                  value={editTime}
+                  onChange={(e) => setEditTime(e.target.value)}
+                  className="border w-full px-3 py-2 rounded mb-3"
+                />
               </div>
             </div>
 
             {/* Location */}
             <label className="block text-sm font-medium">Location</label>
-            <input value={editLocation} onChange={(e) => setEditLocation(e.target.value)} className="border w-full px-3 py-2 rounded mb-3" />
+            <input
+              value={editLocation}
+              onChange={(e) => setEditLocation(e.target.value)}
+              className="border w-full px-3 py-2 rounded mb-3"
+            />
 
             {/* Food items */}
-            <label className="block text-sm font-medium mt-2">Food Items</label>
+            <label className="block text-sm font-medium mt-2">
+              Food Items
+            </label>
             <div className="space-y-2 mt-2">
               {editFoodItems.map((item, index) => (
                 <div key={index} className="flex gap-2">
                   <input
                     value={item.name}
-                    onChange={(e) => updateFoodItem(index, "name", e.target.value)}
+                    onChange={(e) =>
+                      updateFoodItem(index, "name", e.target.value)
+                    }
                     placeholder="Food name"
                     className="border px-3 py-2 rounded w-2/3"
                   />
                   <input
                     value={String(item.quantity)}
-                    onChange={(e) => updateFoodItem(index, "quantity", e.target.value)}
+                    onChange={(e) =>
+                      updateFoodItem(index, "quantity", e.target.value)
+                    }
                     placeholder="Qty"
                     className="border px-3 py-2 rounded w-1/3"
                   />
-                  <button type="button" onClick={() => removeFoodItem(index)} className="text-red-500 ml-1">
+                  <button
+                    type="button"
+                    onClick={() => removeFoodItem(index)}
+                    className="text-red-500 ml-1"
+                  >
                     ✕
                   </button>
                 </div>
               ))}
 
-              <button type="button" onClick={addFoodItem} className="text-teal-600 text-sm underline">
+              <button
+                type="button"
+                onClick={addFoodItem}
+                className="text-teal-600 text-sm underline"
+              >
                 + Add food item
               </button>
             </div>
 
             {/* Controls */}
             <div className="mt-6 flex justify-end gap-3">
-              <button type="button" onClick={closeEditModal} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+              <button
+                type="button"
+                onClick={closeEditModal}
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              >
                 Close
               </button>
-              <button type="button" onClick={handleEditSubmit} className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700">
+              <button
+                type="button"
+                onClick={handleEditSubmit}
+                className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
+              >
                 Save Changes
               </button>
             </div>
@@ -422,7 +490,10 @@ export default function AdminEventsPage() {
 
       {/* Footer */}
       <footer className="bg-black text-white text-center text-sm py-6 px-4 mt-auto">
-        <p>Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative</p>
+        <p>
+          Boston University Center of Computing & Data Sciences: Duan Family
+          Spark! Initiative
+        </p>
         <p>665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space</p>
         <p>buspark@bu.edu</p>
       </footer>
