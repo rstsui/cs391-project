@@ -99,15 +99,15 @@ __turbopack_context__.s([
     "default",
     ()=>ProfileReserve
 ]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/next/dist/compiled/react/compiler-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/src/lib/supabaseClient.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$useAuthGuard$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/src/lib/useAuthGuard.ts [app-client] (ecmascript)");
-;
+var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/spark-bytes/frontend/node_modules/next/dist/compiled/react/jsx-runtime.js [app-client] (ecmascript)");
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -405,14 +405,10 @@ function ProfileReserve() {
     if (authLoading || loading) {
         let t6;
         if ($[15] === Symbol.for("react.memo_cache_sentinel")) {
-            t6 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            t6 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("div", {
                 className: "min-h-screen flex items-center justify-center text-lg",
-                children: "Loading reservations…"
-            }, void 0, false, {
-                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                lineNumber: 313,
-                columnNumber: 12
-            }, this);
+                children: "Loading reservations\u2026"
+            });
             $[15] = t6;
         } else {
             t6 = $[15];
@@ -425,22 +421,14 @@ function ProfileReserve() {
     let t6;
     let t7;
     if ($[16] === Symbol.for("react.memo_cache_sentinel")) {
-        t6 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+        t6 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("h1", {
             className: "text-3xl font-semibold text-center mb-2",
             children: "My Reservations"
-        }, void 0, false, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 326,
-            columnNumber: 10
-        }, this);
-        t7 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+        });
+        t7 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
             className: "text-lg text-center mb-12",
             children: "Food pickups you have reserved"
-        }, void 0, false, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 327,
-            columnNumber: 10
-        }, this);
+        });
         $[16] = t6;
         $[17] = t7;
     } else {
@@ -449,14 +437,10 @@ function ProfileReserve() {
     }
     let t8;
     if ($[18] !== rsvps.length) {
-        t8 = rsvps.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+        t8 = rsvps.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
             className: "text-gray-700 text-center",
             children: "You have no reservations yet."
-        }, void 0, false, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 336,
-            columnNumber: 32
-        }, this);
+        });
         $[18] = rsvps.length;
         $[19] = t8;
     } else {
@@ -471,115 +455,67 @@ function ProfileReserve() {
                     const event_1 = events.find({
                         "ProfileReserve[rsvps.map() > events.find()]": (e_2)=>e_2.id === rsvp_0.event_id
                     }["ProfileReserve[rsvps.map() > events.find()]"]);
-                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("div", {
                         className: "bg-white border border-black w-72 p-6 rounded-2xl shadow-sm",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("h2", {
                                 className: "text-xl font-semibold",
                                 children: event_1?.title
-                            }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 111
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            }),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("p", {
                                 className: "mt-3 text-gray-700",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("strong", {
                                         children: "Date:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                        lineNumber: 351,
-                                        columnNumber: 204
-                                    }, this),
+                                    }),
                                     " ",
                                     event_1?.event_date
                                 ]
-                            }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 170
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            }),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("p", {
                                 className: "text-gray-700",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("strong", {
                                         children: "Time:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                        lineNumber: 351,
-                                        columnNumber: 281
-                                    }, this),
+                                    }),
                                     " ",
                                     formatTime(event_1?.event_time)
                                 ]
-                            }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 252
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            }),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("p", {
                                 className: "text-gray-700",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("strong", {
                                         children: "Location:"
-                                    }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                        lineNumber: 351,
-                                        columnNumber: 370
-                                    }, this),
+                                    }),
                                     " ",
                                     event_1?.location
                                 ]
-                            }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 341
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            }),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
                                 className: "text-gray-700 mt-3",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("strong", {
                                     children: "Items:"
-                                }, void 0, false, {
-                                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                    lineNumber: 351,
-                                    columnNumber: 454
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 420
-                            }, this),
-                            rsvp_0.rsvp_items && rsvp_0.rsvp_items.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                                })
+                            }),
+                            rsvp_0.rsvp_items && rsvp_0.rsvp_items.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("ul", {
                                 className: "list-disc ml-5 text-gray-700",
                                 children: rsvp_0.rsvp_items.map(_ProfileReserveRsvpsMapRsvp_0Rsvp_itemsMap)
-                            }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 534
-                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            }) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
                                 className: "text-gray-700",
                                 children: "No items reserved."
-                            }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 654
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            }),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("div", {
                                 className: "flex gap-3 mt-6",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("button", {
                                         onClick: {
                                             "ProfileReserve[rsvps.map() > <button>.onClick]": ()=>handleCancel(rsvp_0)
                                         }["ProfileReserve[rsvps.map() > <button>.onClick]"],
                                         className: "bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600",
                                         children: "Cancel"
-                                    }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                        lineNumber: 351,
-                                        columnNumber: 739
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    }),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("button", {
                                         onClick: {
                                             "ProfileReserve[rsvps.map() > <button>.onClick]": ()=>{
                                                 setEditingRsvp(rsvp_0);
@@ -590,23 +526,11 @@ function ProfileReserve() {
                                         }["ProfileReserve[rsvps.map() > <button>.onClick]"],
                                         className: "bg-gray-200 text-gray-800 px-4 py-1 rounded-md hover:bg-gray-300",
                                         children: "Edit"
-                                    }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                        lineNumber: 353,
-                                        columnNumber: 155
-                                    }, this)
+                                    })
                                 ]
-                            }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 351,
-                                columnNumber: 706
-                            }, this)
+                            })
                         ]
-                    }, rsvp_0.id, true, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 351,
-                        columnNumber: 18
-                    }, this);
+                    }, rsvp_0.id);
                 }
             })["ProfileReserve[rsvps.map()]"];
             $[24] = events;
@@ -625,28 +549,20 @@ function ProfileReserve() {
     }
     let t10;
     if ($[27] !== t8 || $[28] !== t9) {
-        t10 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+        t10 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("main", {
             className: "flex-1 px-10 py-16 max-w-6xl mx-auto w-full",
             children: [
                 t6,
                 t7,
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("section", {
                     className: "flex flex-wrap justify-center gap-6 px-8 pb-12 mt-10",
                     children: [
                         t8,
                         t9
                     ]
-                }, void 0, true, {
-                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                    lineNumber: 379,
-                    columnNumber: 81
-                }, this)
+                })
             ]
-        }, void 0, true, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 379,
-            columnNumber: 11
-        }, this);
+        });
         $[27] = t8;
         $[28] = t9;
         $[29] = t10;
@@ -655,34 +571,26 @@ function ProfileReserve() {
     }
     let t11;
     if ($[30] !== editFood || $[31] !== editQuantity || $[32] !== editingRsvp || $[33] !== events || $[34] !== handleEditSubmit) {
-        t11 = editingRsvp && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        t11 = editingRsvp && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("div", {
             className: "fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50",
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("div", {
                 className: "bg-white p-6 rounded-xl w-96 shadow-xl",
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("h2", {
                         className: "text-xl font-semibold mb-4",
                         children: [
-                            "Edit Reservation —",
+                            "Edit Reservation \u2014",
                             " ",
                             events.find({
                                 "ProfileReserve[events.find()]": (e_3)=>e_3.id === editingRsvp.event_id
                             }["ProfileReserve[events.find()]"])?.title
                         ]
-                    }, void 0, true, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 388,
-                        columnNumber: 180
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                    }),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("label", {
                         className: "block font-medium mb-1",
                         children: "Food Item"
-                    }, void 0, false, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 390,
-                        columnNumber: 59
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                    }),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("select", {
                         value: editFood || "",
                         onChange: {
                             "ProfileReserve[<select>.onChange]": (e_4)=>setEditFood(e_4.target.value)
@@ -691,20 +599,12 @@ function ProfileReserve() {
                         children: events.find({
                             "ProfileReserve[events.find()]": (e_5)=>e_5.id === editingRsvp.event_id
                         }["ProfileReserve[events.find()]"])?.food_items.map(_ProfileReserveAnonymous)
-                    }, void 0, false, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 390,
-                        columnNumber: 118
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                    }),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("label", {
                         className: "block font-medium mb-1",
                         children: "Quantity (max 3)"
-                    }, void 0, false, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 394,
-                        columnNumber: 98
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                    }),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("input", {
                         type: "number",
                         min: 1,
                         max: 3,
@@ -713,51 +613,27 @@ function ProfileReserve() {
                             "ProfileReserve[<input>.onChange]": (e_6)=>setEditQuantity(Number(e_6.target.value))
                         }["ProfileReserve[<input>.onChange]"],
                         className: "border w-full px-3 py-2 rounded mb-6"
-                    }, void 0, false, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 394,
-                        columnNumber: 164
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    }),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("div", {
                         className: "flex justify-between",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("button", {
                                 onClick: {
                                     "ProfileReserve[<button>.onClick]": ()=>setEditingRsvp(null)
                                 }["ProfileReserve[<button>.onClick]"],
                                 className: "px-4 py-2 bg-gray-300 rounded hover:bg-gray-400",
                                 children: "Close"
-                            }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 396,
-                                columnNumber: 137
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            }),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("button", {
                                 onClick: handleEditSubmit,
                                 className: "px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700",
                                 children: "Save Changes"
-                            }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 398,
-                                columnNumber: 124
-                            }, this)
+                            })
                         ]
-                    }, void 0, true, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 396,
-                        columnNumber: 99
-                    }, this)
+                    })
                 ]
-            }, void 0, true, {
-                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                lineNumber: 388,
-                columnNumber: 124
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 388,
-            columnNumber: 26
-        }, this);
+            })
+        });
         $[30] = editFood;
         $[31] = editQuantity;
         $[32] = editingRsvp;
@@ -769,54 +645,34 @@ function ProfileReserve() {
     }
     let t12;
     if ($[36] === Symbol.for("react.memo_cache_sentinel")) {
-        t12 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
+        t12 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("footer", {
             className: "bg-black text-white text-center text-sm py-6 px-4 mt-auto",
             children: [
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
                     children: "Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative"
-                }, void 0, false, {
-                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                    lineNumber: 410,
-                    columnNumber: 89
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                }),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
                     children: "665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space"
-                }, void 0, false, {
-                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                    lineNumber: 410,
-                    columnNumber: 184
-                }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                }),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsx"])("p", {
                     children: "buspark@bu.edu"
-                }, void 0, false, {
-                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                    lineNumber: 410,
-                    columnNumber: 254
-                }, this)
+                })
             ]
-        }, void 0, true, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 410,
-            columnNumber: 11
-        }, this);
+        });
         $[36] = t12;
     } else {
         t12 = $[36];
     }
     let t13;
     if ($[37] !== t10 || $[38] !== t11) {
-        t13 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        t13 = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("div", {
             className: "min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100",
             children: [
                 t10,
                 t11,
                 t12
             ]
-        }, void 0, true, {
-            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-            lineNumber: 417,
-            columnNumber: 11
-        }, this);
+        });
         $[37] = t10;
         $[38] = t11;
         $[39] = t13;
@@ -833,7 +689,7 @@ _s(ProfileReserve, "qEw2LQpB3CsHFw/qU0d6TY4xYEw=", false, function() {
 });
 _c = ProfileReserve;
 function _ProfileReserveAnonymous(item_2) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("option", {
         value: item_2.name,
         children: [
             item_2.name,
@@ -841,24 +697,16 @@ function _ProfileReserveAnonymous(item_2) {
             item_2.quantity,
             " left)"
         ]
-    }, item_2.name, true, {
-        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-        lineNumber: 427,
-        columnNumber: 10
-    }, this);
+    }, item_2.name);
 }
 function _ProfileReserveRsvpsMapRsvp_0Rsvp_itemsMap(item_1) {
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxs"])("li", {
         children: [
             item_1.food_item,
-            " × ",
+            " \xD7 ",
             item_1.quantity
         ]
-    }, item_1.id, true, {
-        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-        lineNumber: 430,
-        columnNumber: 10
-    }, this);
+    }, item_1.id);
 }
 function _ProfileReserveHandleEditSubmitUpdatedFood_0Some(i_0) {
     return i_0.quantity < 0;
