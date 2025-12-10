@@ -354,7 +354,10 @@ export default function AdminEventsPage() {
                       {rsvps
                         .filter((r) => r.event_id === event.id)
                         .map((r) => (
-                          <div key={r.id} className="bg-gray-50 p-3 rounded">
+                          <div key = {r.id} className="bg-gray-50 p-3 rounded">
+                            <p className="text-sm">
+                              <strong>Email:</strong> {r.email}
+                            </p>
                             <div className="mt-2">
                               <strong>Items:</strong>
                               <ul className="ml-4 list-disc">
