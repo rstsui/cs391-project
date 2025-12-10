@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { useAdminGuard } from "@/lib/useAdminGuard";
 
 type FoodItem = {
   name: string;
@@ -12,8 +13,7 @@ type FoodItem = {
 export default function CreateEvent() {
   const router = useRouter();
 
-  const [authorized, setAuthorized] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { loading, authorized } = useAdminGuard();
 
   const [eventName, setEventName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,54 +26,6 @@ export default function CreateEvent() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([
     { name: "", quantity: "" },
   ]);
-
-  // --------------------------
-  // ADMIN CHECK
-  // --------------------------
-  useEffect(() => {
-    async function checkAccess() {
-      setLoading(true);
-
-      const { data: authData } = await supabase.auth.getUser();
-      const user = authData?.user;
-
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-
-      const { data: profile, error } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error("Profile loading error:", error);
-        router.push("/login");
-        return;
-      }
-
-      if (!profile) {
-        await supabase
-          .from("profiles")
-          .insert([{ id: user.id, email: user.email, role: "user" }]);
-
-        router.push("/request_access");
-        return;
-      }
-
-      if (profile.role !== "admin") {
-        router.push("/request_access");
-        return;
-      }
-
-      setAuthorized(true);
-      setLoading(false);
-    }
-
-    checkAccess();
-  }, [router]);
 
   // --------------------------
   // FOOD ITEM HELPERS
@@ -99,7 +51,7 @@ export default function CreateEvent() {
   // --------------------------
   // SUBMIT EVENT
   // --------------------------
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const cleanFoodItems = foodItems
@@ -143,6 +95,7 @@ export default function CreateEvent() {
     );
   }
 
+  // useAdminGuard already redirected if not admin; render nothing here
   if (!authorized) return null;
 
   // --------------------------
@@ -171,7 +124,9 @@ export default function CreateEvent() {
 
             {/* Organizer */}
             <div>
-              <label className="block text-gray-700 mb-1">Organizer Email</label>
+              <label className="block text-gray-700 mb-1">
+                Organizer Email
+              </label>
               <input
                 type="email"
                 value={email}
@@ -183,7 +138,9 @@ export default function CreateEvent() {
 
             {/* Description */}
             <div>
-              <label className="block text-gray-700 mb-1">Event Description</label>
+              <label className="block text-gray-700 mb-1">
+                Event Description
+              </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -194,7 +151,9 @@ export default function CreateEvent() {
 
             {/* Location */}
             <div>
-              <label className="block text-gray-700 mb-1">Location (please enter complete address or building name)</label>
+              <label className="block text-gray-700 mb-1">
+                Location (please enter complete address or building name)
+              </label>
               <input
                 type="text"
                 value={location}
@@ -251,7 +210,9 @@ export default function CreateEvent() {
                     type="text"
                     placeholder="Food name"
                     value={item.name}
-                    onChange={(e) => updateFoodItem(index, "name", e.target.value)}
+                    onChange={(e) =>
+                      updateFoodItem(index, "name", e.target.value)
+                    }
                     required
                     className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
                   />
@@ -260,7 +221,9 @@ export default function CreateEvent() {
                     type="number"
                     placeholder="Qty"
                     value={item.quantity}
-                    onChange={(e) => updateFoodItem(index, "quantity", e.target.value)}
+                    onChange={(e) =>
+                      updateFoodItem(index, "quantity", e.target.value)
+                    }
                     required
                     className="w-24 border border-gray-300 rounded-lg px-3 py-2"
                   />

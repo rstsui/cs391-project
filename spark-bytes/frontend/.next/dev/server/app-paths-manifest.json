@@ -1,6 +1,4 @@
 {
-  "/admin/events/page": "app/admin/events/page.js",
-  "/create_event/page": "app/create_event/page.js",
   "/page": "app/page.js",
-  "/search/page": "app/search/page.js"
+  "/profile_reserve/page": "app/profile_reserve/page.js"
 }
