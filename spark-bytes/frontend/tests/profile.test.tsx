@@ -1,7 +1,8 @@
+import React from "react";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import ProfilePage from "@/app/profile_page/page";
 import { supabase } from "@/lib/supabaseClient";
+import "@testing-library/jest-dom";
 
 // Mock Next.js navigation
 jest.mock("next/navigation", () => ({
