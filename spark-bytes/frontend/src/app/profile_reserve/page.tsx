@@ -33,8 +33,8 @@ export default function ProfileReserve() {
   const [loading, setLoading] = useState(true);
 
   const [editingRsvp, setEditingRsvp] = useState<any>(null);
-  const [editFood, setEditFood] = useState("");
-  const [editQuantity, setEditQuantity] = useState(1);
+  const [editItems, setEditItems] = useState<any[]>([]); 
+  
 
   /* Load RSVPs + Events */
   useEffect(() => {
@@ -77,6 +77,15 @@ export default function ProfileReserve() {
 
     loadData();
   }, [router]);
+
+  const updateItemQuantity = (index: number, newQty: number) => {
+    setEditItems(prev =>
+      prev.map((item, i) =>
+        i === index ? { ...item, quantity: newQty } : item
+      )
+    );
+  };
+  
 
   /* CANCEL A RESERVATION */
 /* CANCEL A RESERVATION — supports multiple food items */
@@ -165,115 +174,63 @@ const handleEditSubmit = async () => {
   const event = events.find((e) => e.id === editingRsvp.event_id);
   if (!event) return;
 
-  /* 1. Load existing rsvp_items */
-  const { data: existingItems, error: loadErr } = await supabase
+  // Load existing items safely
+  const { data: existingItemsRaw } = await supabase
     .from("rsvp_items")
     .select("*")
     .eq("rsvp_id", rsvpId);
 
-  if (loadErr) {
-    console.error(loadErr);
-    alert("Failed to load existing items.");
-    return;
-  }
+  const existingItems = existingItemsRaw || [];
+  let updatedFood = [...event.food_items];
 
-  /* 2. Find the original item */
-  const oldItem = existingItems.find(
-    (i: { food_item: string }) => i.food_item === editFood
-  );
-  const oldQty = oldItem?.quantity || 0;
-  const newQty = editQuantity;
+  // Loop through every existing reserved item
+  for (const existing of existingItems) {
+    const edited = editItems.find((e) => e.food_item === existing.food_item);
 
-  /* Enforce max rule */
-  if (newQty > 3) {
-    alert("You may only reserve up to 3 of each item.");
-    return;
-  }
+    // If UI somehow doesn't send something, default to old quantity
+    const newQty = edited?.quantity ?? existing.quantity;
+    const oldQty = existing.quantity;
 
-  /* 3. Recalculate event inventory */
-  const updatedFood = event.food_items.map(
-    (item: { name: string; quantity: number }) => {
-      if (item.name === editFood) {
-        return {
-          ...item,
-          quantity: item.quantity + oldQty - newQty,
-        };
-      }
-      return item;
+    // Validate range
+    if (newQty < 1) {
+      alert("Quantity must be at least 1.");
+      return;
     }
-  );
+    if (newQty > 3) {
+      alert("Max quantity per item is 3.");
+      return;
+    }
 
-  /* Prevent negatives */
-  if (updatedFood.some((i: { quantity: number }) => i.quantity < 0)) {
-    alert("Not enough quantity available.");
-    return;
-  }
-
-  /* 4. If quantity becomes 0 → delete item */
-  if (newQty === 0 && oldItem) {
-    await supabase.from("rsvp_items").delete().eq("id", oldItem.id);
-
-    await supabase
-      .from("events")
-      .update({ food_items: updatedFood })
-      .eq("id", event.id);
-
-    alert("Item removed!");
-
-    /* Update UI */
-    setEvents((prev) =>
-      prev.map((ev) =>
-        ev.id === event.id ? { ...ev, food_items: updatedFood } : ev
-      )
+    // Update inventory: add back old, subtract new
+    updatedFood = updatedFood.map((f) =>
+      f.name === existing.food_item
+        ? { ...f, quantity: f.quantity + oldQty - newQty }
+        : f
     );
 
-    setRsvps((prev) =>
-      prev.map((r) =>
-        r.id === rsvpId
-          ? {
-              ...r,
-              rsvp_items: existingItems.filter(
-                (it: any) => it.food_item !== editFood
-              ),
-            }
-          : r
-      )
-    );
+    // Prevent negative inventory
+    const check = updatedFood.find((f) => f.quantity < 0);
+    if (check) {
+      alert(`Not enough ${check.name} available.`);
+      return;
+    }
 
-    setEditingRsvp(null);
-    return;
-  }
-
-  /* 5. Update or insert new rsvp_item row */
-  if (oldItem) {
+    // Update item quantity in DB
     await supabase
       .from("rsvp_items")
       .update({ quantity: newQty })
-      .eq("id", oldItem.id);
-  } else {
-    await supabase.from("rsvp_items").insert({
-      rsvp_id: rsvpId,
-      food_item: editFood,
-      quantity: newQty,
-    });
+      .eq("id", existing.id);
   }
 
-  /* 6. Update event inventory */
+  // Update event inventory in DB
   await supabase
     .from("events")
     .update({ food_items: updatedFood })
     .eq("id", event.id);
 
-  alert("Reservation item updated!");
+  alert("Reservation updated!");
 
-  /* 7. Update UI immediately */
-  const updatedItems =
-    oldItem
-      ? existingItems.map((it: any) =>
-          it.food_item === editFood ? { ...it, quantity: newQty } : it
-        )
-      : [...existingItems, { food_item: editFood, quantity: newQty }];
-
+  // Update state (UI)
   setEvents((prev) =>
     prev.map((ev) =>
       ev.id === event.id ? { ...ev, food_items: updatedFood } : ev
@@ -282,13 +239,14 @@ const handleEditSubmit = async () => {
 
   setRsvps((prev) =>
     prev.map((r) =>
-      r.id === rsvpId ? { ...r, rsvp_items: updatedItems } : r
+      r.id === rsvpId
+        ? { ...r, rsvp_items: editItems } // filtered & updated items
+        : r
     )
   );
 
   setEditingRsvp(null);
 };
-
 
   /* UI */
   return (
@@ -351,9 +309,15 @@ const handleEditSubmit = async () => {
                     onClick={() => {
                       setEditingRsvp(rsvp);
 
-                      const firstItem = rsvp.rsvp_items?.[0];
-                      setEditFood(firstItem?.food_item || "");      // use first reserved item
-                      setEditQuantity(firstItem?.quantity || 1);    // default quantity
+                      setEditingRsvp(rsvp);
+                      setEditItems(
+                        rsvp.rsvp_items.map((i: any) => ({
+                          id: i.id,
+                          food_item: i.food_item,
+                          quantity: i.quantity,
+                        }))
+                      );
+                      
                     }}
                     className="bg-gray-200 text-gray-800 px-4 py-1 rounded-md hover:bg-gray-300"
                   >
@@ -369,55 +333,51 @@ const handleEditSubmit = async () => {
 
       {/* EDIT POPUP */}
       {editingRsvp && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-xl w-96 shadow-xl">
-            <h2 className="text-xl font-semibold mb-4">
-              Edit Reservation — {events.find((e) => e.id === editingRsvp.event_id)?.title}
-            </h2>
+  <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="bg-white p-6 rounded-xl w-96 shadow-xl">
+      <h2 className="text-xl font-semibold mb-4">
+        Edit Reservation — {
+          events.find((e) => e.id === editingRsvp.event_id)?.title
+        }
+      </h2>
 
-            <label className="block font-medium mb-1">Food Item</label>
-            <select
-              value={editFood || ""} 
-              onChange={(e) => setEditFood(e.target.value)}
-              className="border w-full px-3 py-2 rounded mb-4"
-            >
-              {events
-                .find((e) => e.id === editingRsvp.event_id)
-                ?.food_items.map((item: any) => (
-                  <option key={item.name} value={item.name}>
-                    {item.name} ({item.quantity} left)
-                  </option>
-                ))}
-            </select>
+      {editItems.map((item: any, index: number) => (
+        <div key={item.food_item} className="mb-4 border-b pb-3">
+          <p className="font-medium">{item.food_item}</p>
 
-            <label className="block font-medium mb-1">Quantity (max 3)</label>
-            <input
-              type="number"
-              min={1}
-              max={3}
-              value={editQuantity}
-              onChange={(e) => setEditQuantity(Number(e.target.value))}
-              className="border w-full px-3 py-2 rounded mb-6"
-            />
-
-            <div className="flex justify-between">
-              <button
-                onClick={() => setEditingRsvp(null)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                Close
-              </button>
-
-              <button
-                onClick={handleEditSubmit}
-                className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
+          <label className="block text-sm mt-1">Quantity (1–3)</label>
+          <input
+            type="number"
+            min={1}
+            max={3}
+            value={item.quantity}
+            onChange={(e) =>
+              updateItemQuantity(index, Number(e.target.value))
+            }
+            className="border w-full px-3 py-2 rounded"
+          />
         </div>
-      )}
+      ))}
+
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={() => setEditingRsvp(null)}
+          className="px-4 py-2 bg-gray-300 rounded"
+        >
+          Close
+        </button>
+
+        <button
+          onClick={handleEditSubmit}
+          className="px-4 py-2 bg-teal-600 text-white rounded"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       <footer className="bg-black text-white text-center text-sm py-6 px-4 mt-auto">
         <p>Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative</p>
