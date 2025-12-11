@@ -19,11 +19,11 @@ var _s = __turbopack_context__.k.signature();
 function ProfilePage() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(29);
-    if ($[0] !== "394754eb8afb58f4fc1be71d306444110d1517e5c141739e206a19cd6ab353fc") {
+    if ($[0] !== "e07f781f9484b307badf8654a45b873421b55247e73a106326544d4776cdbec5") {
         for(let $i = 0; $i < 29; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "394754eb8afb58f4fc1be71d306444110d1517e5c141739e206a19cd6ab353fc";
+        $[0] = "e07f781f9484b307badf8654a45b873421b55247e73a106326544d4776cdbec5";
     }
     const [profile, setProfile] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [authUser, setAuthUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);

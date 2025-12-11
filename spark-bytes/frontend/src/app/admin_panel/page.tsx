@@ -1,14 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { useAdminGuard } from "@/lib/useAdminGuard";
 
 export default function AdminPanel() {
-  const { loading, authorized } = useAdminGuard();
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
   const [requests, setRequests] = useState<any[]>([]);
-  const [loadingRequests, setLoadingRequests] = useState(true);
+  const [loading, setLoading] = useState(true);
 
+  
+  // SECURITY CHECK: ADMIN ONLY
+  
+  useEffect(() => {
+    async function checkRole() {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      if (profile?.role !== "admin") {
+        router.push("/request_access");
+        return;
+      }
+
+      setAuthorized(true);
+    }
+
+    checkRole();
+  }, []);
+
+  // ---------------------------
+  // FETCH PENDING REQUESTS
+  // ---------------------------
   useEffect(() => {
     if (!authorized) return;
 
@@ -18,47 +51,40 @@ export default function AdminPanel() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (!error) {
-        setRequests(data || []);
-      }
-
-      setLoadingRequests(false);
+      if (!error) setRequests(data || []);
+      setLoading(false);
     }
 
     loadRequests();
   }, [authorized]);
 
+  // ---------------------------
+  // APPROVE USER
+  // ---------------------------
   async function approveRequest(request: any) {
+    // 1) promote user to admin
     await supabase
       .from("profiles")
       .update({ role: "admin" })
       .eq("id", request.user_id);
 
+    // 2) remove the request
     await supabase
       .from("admin_requests")
       .delete()
       .eq("id", request.id);
 
+    // 3) update UI
     setRequests((prev) => prev.filter((r) => r.id !== request.id));
-  }
-
-  if (loading) {
-    return (
-      <div className="p-10 text-center">
-        Checking access…
-      </div>
-    );
   }
 
   if (!authorized) return null;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100 px-6 py-16">
-      <h1 className="text-3xl font-semibold text-center mb-10">
-        Admin Requests
-      </h1>
+      <h1 className="text-3xl font-semibold text-center mb-10">Admin Requests</h1>
 
-      {loadingRequests ? (
+      {loading ? (
         <p className="text-center text-gray-600">Loading...</p>
       ) : requests.length === 0 ? (
         <p className="text-center text-gray-600">

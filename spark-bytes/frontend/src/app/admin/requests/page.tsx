@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useAdminGuard } from "@/lib/useAdminGuard";
+import { useRouter } from "next/navigation";
 
 type RequestRow = {
   id: string;
@@ -14,13 +14,42 @@ type RequestRow = {
 };
 
 export default function AdminRequestsPage() {
-  const { loading, authorized } = useAdminGuard();
+  const router = useRouter();
 
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null); // null = still checking
   const [requests, setRequests] = useState<RequestRow[]>([]);
-  const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">(
-    "all"
-  );
+  const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
+  // Admin Gatekeeping
+  useEffect(() => {
+    async function checkAdmin() {
+      const { data: auth } = await supabase.auth.getUser();
+      const user = auth?.user;
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        
+        .maybeSingle();
+
+      if (!profile || profile.role !== "admin") {
+        router.push("/request_access");
+        return;
+      }
+
+      setIsAdmin(true);
+    }
+
+    checkAdmin();
+  }, [router]);
+
+  // Load Requests
   async function loadRequests() {
     const { data, error } = await supabase
       .from("admin_requests_with_profiles")
@@ -47,25 +76,23 @@ export default function AdminRequestsPage() {
   }
 
   useEffect(() => {
-    if (authorized) {
-      loadRequests();
-    }
-  }, [authorized]);
+    if (isAdmin) loadRequests();
+  }, [isAdmin]);
 
+  // Update Request Status
   async function updateStatus(id: string, newStatus: "approved" | "rejected") {
+    // fetch user_id
     const { data: reqRow } = await supabase
       .from("admin_requests")
       .select("user_id")
       .eq("id", id)
       .maybeSingle();
 
-    if (!reqRow) {
-      alert("Unable to load request.");
-      return;
-    }
+    if (!reqRow) return alert("Unable to load request.");
 
     const userId = reqRow.user_id;
 
+    // update request
     const { error: statusErr } = await supabase
       .from("admin_requests")
       .update({ status: newStatus })
@@ -76,6 +103,7 @@ export default function AdminRequestsPage() {
       return;
     }
 
+    // promote to admin
     if (newStatus === "approved") {
       const { error: roleErr } = await supabase
         .from("profiles")
@@ -91,12 +119,14 @@ export default function AdminRequestsPage() {
     loadRequests();
   }
 
+  // FILTER SYSTEM
   const filteredRequests =
-    filter === "all"
-      ? requests
-      : requests.filter((req) => req.status === filter);
+    filter === "all" ? requests : requests.filter((req) => req.status === filter);
 
-  if (loading) {
+  // Render Logic
+
+  // Still checking admin?
+  if (isAdmin === null) {
     return (
       <div className="p-10 text-center">
         Checking access…
@@ -104,12 +134,14 @@ export default function AdminRequestsPage() {
     );
   }
 
-  if (!authorized) return null;
+  // Non-admin users will already be redirected.
+  if (!isAdmin) return null;
 
   return (
     <div className="p-10 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Admin Access Requests</h1>
 
+      {/* FILTER BUTTONS */}
       <div className="flex gap-4 mb-6">
         {["all", "pending", "approved", "rejected"].map((f) => (
           <button
@@ -131,10 +163,7 @@ export default function AdminRequestsPage() {
       )}
 
       {filteredRequests.map((req) => (
-        <div
-          key={req.id}
-          className="border p-5 rounded-xl shadow-sm bg-white mb-4"
-        >
+        <div key={req.id} className="border p-5 rounded-xl shadow-sm bg-white mb-4">
           <div className="flex justify-between mb-2">
             <p className="font-semibold text-lg">{req.email}</p>
             <span

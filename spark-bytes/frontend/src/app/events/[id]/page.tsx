@@ -15,7 +15,6 @@ function formatTime(timeString: string) {
   const minute = parseInt(minuteStr);
 
   const ampm = hour >= 12 ? "PM" : "AM";
-
   hour = hour % 12;
   if (hour === 0) hour = 12;
 
@@ -25,10 +24,12 @@ function formatTime(timeString: string) {
 const EventMap = dynamic(() => import("./map_component"), {
   ssr: false,
 });
+
 type FoodItem = {
   name: string;
   quantity: number;
 };
+
 type EventType = {
   id: number;
   title: string;
@@ -49,106 +50,152 @@ export default function EventInfoPage() {
 
   const [event, setEvent] = useState<EventType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedFood, setSelectedFood] = useState("");
-  const [quantity, setQuantity] = useState(1);
   const [loggedInUser, setLoggedInUser] = useState<any>(null);
+
+  /* RSVP form state */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  
-  // Fetch event + RSVPs
+
+  /** MULTIPLE ITEMS STATE **/
+  const [items, setItems] = useState([
+    { food: "", quantity: 1 }
+  ]);
+
+  /* Load event + auth */
   useEffect(() => {
     async function loadEvent() {
-      const { data, error } = await supabase
+      const { data: eventData } = await supabase
         .from("events")
         .select("*")
         .eq("id", eventId)
         .maybeSingle();
-      // Check user login status
-    // Check user login status
+
       const { data: userData } = await supabase.auth.getUser();
       setLoggedInUser(userData?.user || null);
 
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      setEvent(data as EventType);
+      setEvent(eventData as EventType);
       setLoading(false);
     }
 
     loadEvent();
   }, [eventId]);
 
-  // Submit RSVP
-  async function handleReserve(e: React.FormEvent<HTMLFormElement>) {
+  /** FILTER OPTIONS so each dropdown only shows food not yet selected */
+  function getAvailableOptions(index: number) {
+    if (!event) return [];
+
+    const selectedFoods = items
+      .map((it, i) => (i === index ? null : it.food))
+      .filter(Boolean);
+
+    return event.food_items.filter(
+      f => !selectedFoods.includes(f.name) && f.quantity > 0
+    );
+  }
+
+  /** Add new row */
+  function addItemRow() {
+    setItems([...items, { food: "", quantity: 1 }]);
+  }
+
+  /** Remove row */
+  function removeItem(index: number) {
+    setItems(items.filter((_, i) => i !== index));
+  }
+
+  /** Handle food change */
+  function updateItemFood(index: number, value: string) {
+    const updated = [...items];
+    updated[index].food = value;
+    setItems(updated);
+  }
+
+  /** Handle quantity change */
+  function updateQuantity(index: number, value: number) {
+    const updated = [...items];
+    updated[index].quantity = value;
+    setItems(updated);
+  }
+
+  /** SUBMIT RSVP */
+  async function handleReserve(e: React.FormEvent) {
     e.preventDefault();
     if (!event) return;
 
-    // 1. Capacity check
-    if (event.attendees >= event.capacity) {
-      alert("This event is full.");
+    // Validate form
+    if (items.length === 0) {
+      alert("Please select at least one food item.");
       return;
     }
 
-    // 2. Food availability
-    const foodObj = event.food_items.find((f) => f.name === selectedFood);
-    if (!foodObj) {
-      alert("Invalid food selection.");
-      return;
+    for (const row of items) {
+      if (!row.food) {
+        alert("Each item must have a food selection.");
+        return;
+      }
+      if (row.quantity < 1 || row.quantity > 3) {
+        alert("Each item must be between 1–3.");
+        return;
+      }
+
+      const foodObj = event.food_items.find(f => f.name === row.food);
+      if (!foodObj || row.quantity > foodObj.quantity) {
+        alert(`Not enough quantity available for ${row.food}.`);
+        return;
+      }
     }
 
-    if (quantity > foodObj.quantity) {
-      alert("Not enough quantity available.");
-      return;
-    }
-
-    // 3. Max 3 per person
-    if (quantity > 3) {
-      alert("You can only reserve up to 3 items.");
-      return;
-    }
-
-    // 4. Prevent duplicate RSVPs by email
-    const { data: existingRSVP } = await supabase
+    // Prevent duplicate RSVP
+    const { data: existing } = await supabase
       .from("rsvps")
       .select("*")
       .eq("email", email)
       .eq("event_id", eventId);
 
-    if (existingRSVP && existingRSVP.length > 0) {
+    if (existing && existing.length > 0) {
       alert("You already reserved food for this event.");
       return;
     }
 
-    // Insert new RSVP
-    const { error } = await supabase.from("rsvps").insert({
-      event_id: event.id,
-      name,
-      email,
-      food_item: selectedFood,
-      quantity,
-    });
+    // Insert RSVP
+    const { data: newRsvp, error } = await supabase
+      .from("rsvps")
+      .insert({
+        event_id: event.id,
+        name,
+        email
+      })
+      .select()
+      .single();
 
-    if (error) {
-      console.error("SUPABASE RSVP ERROR →", JSON.stringify(error, null, 2));
+    if (error || !newRsvp) {
+      console.error(error);
       alert("Failed to reserve.");
       return;
     }
 
-    // Update event attendees count AND food quantity
-    const updatedFood = event.food_items.map((item) =>
-      item.name === selectedFood
-        ? { ...item, quantity: item.quantity - quantity }
-        : item
-    );
+    // Insert rsvp_items rows
+    for (const row of items) {
+      await supabase.from("rsvp_items").insert({
+        rsvp_id: newRsvp.id,
+        food_item: row.food,
+        quantity: row.quantity
+      });
+    }
+
+    // Update event inventory
+    const updatedFood = event.food_items.map(f => {
+      const row = items.find(i => i.food === f.name);
+      return row
+        ? { ...f, quantity: f.quantity - row.quantity }
+        : f;
+    });
 
     await supabase
       .from("events")
       .update({
         attendees: event.attendees + 1,
-        food_items: updatedFood,
+        food_items: updatedFood
       })
       .eq("id", event.id);
 
@@ -159,151 +206,139 @@ export default function EventInfoPage() {
   if (loading || !event)
     return <div className="p-10 text-center">Loading event...</div>;
 
+  const allFoods = event.food_items;
+  const allSelected = items.length >= allFoods.length;
+
   return (
-<div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-teal-50 to-teal-100">
       <main className="flex justify-center py-16 px-4">
         <div className="flex flex-col md:flex-row gap-10 w-full max-w-6xl">
-          {/* Event Info */}
+
+          {/* EVENT INFO */}
           <div className="md:w-2/3 w-full bg-white p-8 rounded-2xl shadow-sm">
             <h2 className="text-3xl font-semibold mb-3">{event.title}</h2>
 
-            <p className="text-gray-700 mb-6 leading-relaxed">
-              {event.description}
-            </p>
+            <p className="text-gray-700 mb-6">{event.description}</p>
 
-            <div className="space-y-3 mb-8 text-gray-600 text-sm">
-              <p>
-                <strong>Location:</strong> {event.location}
-              </p>
-              <p>
-                <strong>Date:</strong> {event.event_date}
-              </p>
-              <p>
-                <strong>Time:</strong> {formatTime(event.event_time)}
-              </p>
-              <p>
-                <strong>Created by:</strong> {event.organizer_email}
-              </p>
-              <p>
-                <strong>Available Food:</strong>
-              </p>
+            <div className="space-y-3 text-gray-600 text-sm mb-8">
+              <p><strong>Location:</strong> {event.location}</p>
+              <p><strong>Date:</strong> {event.event_date}</p>
+              <p><strong>Time:</strong> {formatTime(event.event_time)}</p>
+              <p><strong>Created by:</strong> {event.organizer_email}</p>
+
+              <p><strong>Available Food:</strong></p>
               <ul className="ml-6 list-disc">
                 {event.food_items.map((item, i) => (
-                  <li key={i}>
-                    {item.name} — {item.quantity} available
-                  </li>
+                  <li key={i}>{item.name} — {item.quantity} available</li>
                 ))}
               </ul>
-              <p>
-                <strong>Capacity:</strong> {event.attendees}/{event.capacity}
-              </p>
+
+              <p><strong>Capacity:</strong> {event.attendees}/{event.capacity}</p>
             </div>
 
-            <div className="w-full h-64 rounded-lg border border-gray-300 overflow-hidden">
+            <div className="w-full h-64 rounded-lg border overflow-hidden">
               <EventMap location={event.location} />
             </div>
           </div>
 
-          {/* Reservation Form */}
-{/* Reservation Form / Login Prompt */}
-<div className="md:w-1/3 w-full">
-  <div className="bg-teal-600 text-white p-8 rounded-2xl shadow-md h-full flex flex-col justify-center">
+          {/* RESERVE FOOD */}
+          <div className="md:w-1/3 w-full">
+            <div className="bg-teal-600 text-white p-8 rounded-2xl shadow-md">
 
-    {/* ⭐ If not logged in → show login message */}
-    {!loggedInUser ? (
-      <div className="text-center">
-        <h3 className="text-xl font-semibold mb-4">Log in to reserve food</h3>
-        <button
-          onClick={() => router.push("/login")}
-          className="bg-white text-teal-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-100"
-        >
-          Log In
-        </button>
-      </div>
-    ) : (
-      <>
-        {/* ⭐ If logged in → show reservation form */}
-        <h3 className="text-xl font-semibold mb-6 text-center">
-          Reserve Food
-        </h3>
+              {!loggedInUser ? (
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold mb-4">Log in to reserve food</h3>
+                  <button
+                    onClick={() => router.push("/login")}
+                    className="bg-white text-teal-700 font-semibold px-4 py-2 rounded-md"
+                  >
+                    Log In
+                  </button>
+                </div>
+              ) : (
+                <form className="flex flex-col gap-4" onSubmit={handleReserve}>
+                  <h3 className="text-xl font-semibold text-center mb-4">Reserve Food</h3>
 
-        <form className="flex flex-col gap-4" onSubmit={handleReserve}>
-          <div>
-            <label className="block text-sm mb-1">Full Name</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="p-2 w-full rounded-md text-black"
-            />
-          </div>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Full Name"
+                    className="p-2 rounded-md text-black"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
 
-          <div>
-            <label className="block text-sm mb-1">BU Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="p-2 w-full rounded-md text-black"
-            />
-          </div>
+                  <input
+                    type="email"
+                    required
+                    placeholder="BU Email"
+                    className="p-2 rounded-md text-black"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
 
-          <div>
-            <label className="block text-sm mb-1">Select Food</label>
-            <select
-              required
-              value={selectedFood}
-              onChange={(e) => setSelectedFood(e.target.value)}
-              className="p-2 w-full rounded-md text-black"
-            >
-              <option value="">Select an item</option>
-              {event.food_items.map((item, i) =>
-                item.quantity > 0 ? (
-                  <option key={i} value={item.name}>
-                    {item.name} ({item.quantity} left)
-                  </option>
-                ) : null
+                  {/* MULTIPLE ITEM ROWS */}
+                  {items.map((row, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <select
+                        required
+                        className="text-black p-2 rounded-md flex-1"
+                        value={row.food}
+                        onChange={(e) => updateItemFood(index, e.target.value)}
+                      >
+                        <option value="">Select item</option>
+                        {getAvailableOptions(index).map((item) => (
+                          <option key={item.name} value={item.name}>
+                            {item.name} ({item.quantity} left)
+                          </option>
+                        ))}
+                      </select>
+
+                      <input
+                        type="number"
+                        min={1}
+                        max={3}
+                        className="w-16 text-black p-2 rounded-md"
+                        value={row.quantity}
+                        onChange={(e) => updateQuantity(index, Number(e.target.value))}
+                      />
+
+                      {items.length > 1 && (
+                        <button
+                          type="button"
+                          className="text-white text-xl"
+                          onClick={() => removeItem(index)}
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* ADD ANOTHER ITEM */}
+                  {!allSelected && (
+                    <button
+                      type="button"
+                      className="underline text-sm mt-1"
+                      onClick={addItemRow}
+                    >
+                      + Add another item
+                    </button>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="bg-white text-teal-700 font-semibold py-2 rounded-md mt-4"
+                  >
+                    Reserve
+                  </button>
+                </form>
               )}
-            </select>
+
+            </div>
           </div>
-
-          <div>
-            <label className="block text-sm mb-1">Quantity</label>
-            <input
-              type="number"
-              min="1"
-              max="3"
-              required
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="p-2 w-full rounded-md text-black"
-            />
-            <p className="text-xs mt-1 opacity-80">Max 3 per person</p>
-          </div>
-
-          <button
-            type="submit"
-            className="bg-white text-teal-700 font-semibold py-2 rounded-md hover:bg-gray-100 mt-4"
-          >
-            Reserve
-          </button>
-        </form>
-      </>
-    )}
-  </div>
-</div>
-
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-black text-white text-center text-sm py-6 px-4 mt-12">
-        <p>Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative</p>
-        <p>665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space</p>
-        <p>buspark@bu.edu</p>
-      </footer>
     </div>
   );
 }

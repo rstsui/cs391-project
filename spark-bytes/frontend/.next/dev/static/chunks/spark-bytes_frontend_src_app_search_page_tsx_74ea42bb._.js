@@ -31,11 +31,11 @@ function formatTime(timeString) {
 function SearchPage() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(29);
-    if ($[0] !== "7a511410badf0af2bacb57b48fee281ba39b711ee9280dd2acd1d8a8f18886c3") {
+    if ($[0] !== "5e5f19c7e2cf6d50a6c3517645573ec3f0f89cb5c4f57ddfc378495615a9b246") {
         for(let $i = 0; $i < 29; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "7a511410badf0af2bacb57b48fee281ba39b711ee9280dd2acd1d8a8f18886c3";
+        $[0] = "5e5f19c7e2cf6d50a6c3517645573ec3f0f89cb5c4f57ddfc378495615a9b246";
     }
     let t0;
     if ($[1] === Symbol.for("react.memo_cache_sentinel")) {

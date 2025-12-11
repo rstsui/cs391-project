@@ -31,8 +31,7 @@ function ProfileReserve() {
     const [events, setEvents] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
     const [editingRsvp, setEditingRsvp] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [editFood, setEditFood] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    const [editQuantity, setEditQuantity] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(1);
+    const [editItems, setEditItems] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     /* Load RSVPs + Events */ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const loadData = async ()=>{
             const { data } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].auth.getUser();
@@ -62,6 +61,12 @@ function ProfileReserve() {
     }, [
         router
     ]);
+    const updateItemQuantity = (index, newQty)=>{
+        setEditItems((prev)=>prev.map((item, i)=>i === index ? {
+                    ...item,
+                    quantity: newQty
+                } : item));
+    };
     /* CANCEL A RESERVATION */ /* CANCEL A RESERVATION — supports multiple food items */ const handleCancel = async (rsvp)=>{
         const yes = confirm("Cancel this reservation?");
         if (!yes) return;
@@ -120,82 +125,58 @@ function ProfileReserve() {
         const rsvpId = editingRsvp.id;
         const event = events.find((e)=>e.id === editingRsvp.event_id);
         if (!event) return;
-        /* 1. Load existing rsvp_items */ const { data: existingItems, error: loadErr } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvp_items").select("*").eq("rsvp_id", rsvpId);
-        if (loadErr) {
-            console.error(loadErr);
-            alert("Failed to load existing items.");
-            return;
-        }
-        /* 2. Find the original item */ const oldItem = existingItems.find((i)=>i.food_item === editFood);
-        const oldQty = oldItem?.quantity || 0;
-        const newQty = editQuantity;
-        /* Enforce max rule */ if (newQty > 3) {
-            alert("You may only reserve up to 3 of each item.");
-            return;
-        }
-        /* 3. Recalculate event inventory */ const updatedFood = event.food_items.map((item)=>{
-            if (item.name === editFood) {
-                return {
-                    ...item,
-                    quantity: item.quantity + oldQty - newQty
-                };
+        // Load existing items safely
+        const { data: existingItemsRaw } = await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvp_items").select("*").eq("rsvp_id", rsvpId);
+        const existingItems = existingItemsRaw || [];
+        let updatedFood = [
+            ...event.food_items
+        ];
+        // Loop through every existing reserved item
+        for (const existing of existingItems){
+            const edited = editItems.find((e)=>e.food_item === existing.food_item);
+            // If UI somehow doesn't send something, default to old quantity
+            const newQty = edited?.quantity ?? existing.quantity;
+            const oldQty = existing.quantity;
+            // Validate range
+            if (newQty < 1) {
+                alert("Quantity must be at least 1.");
+                return;
             }
-            return item;
-        });
-        /* Prevent negatives */ if (updatedFood.some((i)=>i.quantity < 0)) {
-            alert("Not enough quantity available.");
-            return;
-        }
-        /* 4. If quantity becomes 0 → delete item */ if (newQty === 0 && oldItem) {
-            await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvp_items").delete().eq("id", oldItem.id);
-            await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("events").update({
-                food_items: updatedFood
-            }).eq("id", event.id);
-            alert("Item removed!");
-            /* Update UI */ setEvents((prev)=>prev.map((ev)=>ev.id === event.id ? {
-                        ...ev,
-                        food_items: updatedFood
-                    } : ev));
-            setRsvps((prev)=>prev.map((r)=>r.id === rsvpId ? {
-                        ...r,
-                        rsvp_items: existingItems.filter((it)=>it.food_item !== editFood)
-                    } : r));
-            setEditingRsvp(null);
-            return;
-        }
-        /* 5. Update or insert new rsvp_item row */ if (oldItem) {
+            if (newQty > 3) {
+                alert("Max quantity per item is 3.");
+                return;
+            }
+            // Update inventory: add back old, subtract new
+            updatedFood = updatedFood.map((f)=>f.name === existing.food_item ? {
+                    ...f,
+                    quantity: f.quantity + oldQty - newQty
+                } : f);
+            // Prevent negative inventory
+            const check = updatedFood.find((f)=>f.quantity < 0);
+            if (check) {
+                alert(`Not enough ${check.name} available.`);
+                return;
+            }
+            // Update item quantity in DB
             await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvp_items").update({
                 quantity: newQty
-            }).eq("id", oldItem.id);
-        } else {
-            await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("rsvp_items").insert({
-                rsvp_id: rsvpId,
-                food_item: editFood,
-                quantity: newQty
-            });
+            }).eq("id", existing.id);
         }
-        /* 6. Update event inventory */ await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("events").update({
+        // Update event inventory in DB
+        await __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$src$2f$lib$2f$supabaseClient$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["supabase"].from("events").update({
             food_items: updatedFood
         }).eq("id", event.id);
-        alert("Reservation item updated!");
-        /* 7. Update UI immediately */ const updatedItems = oldItem ? existingItems.map((it)=>it.food_item === editFood ? {
-                ...it,
-                quantity: newQty
-            } : it) : [
-            ...existingItems,
-            {
-                food_item: editFood,
-                quantity: newQty
-            }
-        ];
+        alert("Reservation updated!");
+        // Update state (UI)
         setEvents((prev)=>prev.map((ev)=>ev.id === event.id ? {
                     ...ev,
                     food_items: updatedFood
                 } : ev));
         setRsvps((prev)=>prev.map((r)=>r.id === rsvpId ? {
                     ...r,
-                    rsvp_items: updatedItems
-                } : r));
+                    rsvp_items: editItems
+                } // filtered & updated items
+                 : r));
         setEditingRsvp(null);
     };
     /* UI */ return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -209,7 +190,7 @@ function ProfileReserve() {
                         children: "My Reservations"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 297,
+                        lineNumber: 255,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -217,7 +198,7 @@ function ProfileReserve() {
                         children: "Food pickups you have reserved"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 298,
+                        lineNumber: 256,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -228,7 +209,7 @@ function ProfileReserve() {
                                 children: "You have no reservations yet."
                             }, void 0, false, {
                                 fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                lineNumber: 301,
+                                lineNumber: 259,
                                 columnNumber: 47
                             }, this),
                             rsvps.map((rsvp)=>{
@@ -241,7 +222,7 @@ function ProfileReserve() {
                                             children: event?.title
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 312,
+                                            lineNumber: 270,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -251,7 +232,7 @@ function ProfileReserve() {
                                                     children: "Date:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                    lineNumber: 315,
+                                                    lineNumber: 273,
                                                     columnNumber: 19
                                                 }, this),
                                                 " ",
@@ -259,7 +240,7 @@ function ProfileReserve() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 314,
+                                            lineNumber: 272,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -269,7 +250,7 @@ function ProfileReserve() {
                                                     children: "Time:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                    lineNumber: 319,
+                                                    lineNumber: 277,
                                                     columnNumber: 19
                                                 }, this),
                                                 " ",
@@ -277,7 +258,7 @@ function ProfileReserve() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 318,
+                                            lineNumber: 276,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -287,7 +268,7 @@ function ProfileReserve() {
                                                     children: "Location:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                    lineNumber: 323,
+                                                    lineNumber: 281,
                                                     columnNumber: 19
                                                 }, this),
                                                 " ",
@@ -295,7 +276,7 @@ function ProfileReserve() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 322,
+                                            lineNumber: 280,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -304,12 +285,12 @@ function ProfileReserve() {
                                                 children: "Items:"
                                             }, void 0, false, {
                                                 fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                lineNumber: 327,
+                                                lineNumber: 285,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 326,
+                                            lineNumber: 284,
                                             columnNumber: 17
                                         }, this),
                                         rsvp.rsvp_items && rsvp.rsvp_items.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -322,19 +303,19 @@ function ProfileReserve() {
                                                     ]
                                                 }, item.id, true, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                    lineNumber: 332,
+                                                    lineNumber: 290,
                                                     columnNumber: 25
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 330,
+                                            lineNumber: 288,
                                             columnNumber: 21
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-gray-700",
                                             children: "No items reserved."
                                         }, void 0, false, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 338,
+                                            lineNumber: 296,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -346,46 +327,49 @@ function ProfileReserve() {
                                                     children: "Cancel"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                    lineNumber: 343,
+                                                    lineNumber: 301,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                     onClick: ()=>{
                                                         setEditingRsvp(rsvp);
-                                                        const firstItem = rsvp.rsvp_items?.[0];
-                                                        setEditFood(firstItem?.food_item || ""); // use first reserved item
-                                                        setEditQuantity(firstItem?.quantity || 1); // default quantity
+                                                        setEditingRsvp(rsvp);
+                                                        setEditItems(rsvp.rsvp_items.map((i)=>({
+                                                                id: i.id,
+                                                                food_item: i.food_item,
+                                                                quantity: i.quantity
+                                                            })));
                                                     },
                                                     className: "bg-gray-200 text-gray-800 px-4 py-1 rounded-md hover:bg-gray-300",
                                                     children: "Edit"
                                                 }, void 0, false, {
                                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                                    lineNumber: 350,
+                                                    lineNumber: 308,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                            lineNumber: 342,
+                                            lineNumber: 300,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, rsvp.id, true, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                    lineNumber: 308,
+                                    lineNumber: 266,
                                     columnNumber: 15
                                 }, this);
                             })
                         ]
                     }, void 0, true, {
                         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 300,
+                        lineNumber: 258,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                lineNumber: 296,
+                lineNumber: 254,
                 columnNumber: 7
             }, this),
             editingRsvp && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -401,96 +385,83 @@ function ProfileReserve() {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                            lineNumber: 374,
-                            columnNumber: 13
+                            lineNumber: 338,
+                            columnNumber: 7
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                            className: "block font-medium mb-1",
-                            children: "Food Item"
-                        }, void 0, false, {
-                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                            lineNumber: 378,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
-                            value: editFood || "",
-                            onChange: (e)=>setEditFood(e.target.value),
-                            className: "border w-full px-3 py-2 rounded mb-4",
-                            children: events.find((e)=>e.id === editingRsvp.event_id)?.food_items.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                    value: item.name,
-                                    children: [
-                                        item.name,
-                                        " (",
-                                        item.quantity,
-                                        " left)"
-                                    ]
-                                }, item.name, true, {
-                                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                    lineNumber: 387,
-                                    columnNumber: 19
-                                }, this))
-                        }, void 0, false, {
-                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                            lineNumber: 379,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                            className: "block font-medium mb-1",
-                            children: "Quantity (max 3)"
-                        }, void 0, false, {
-                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                            lineNumber: 393,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                            type: "number",
-                            min: 1,
-                            max: 3,
-                            value: editQuantity,
-                            onChange: (e)=>setEditQuantity(Number(e.target.value)),
-                            className: "border w-full px-3 py-2 rounded mb-6"
-                        }, void 0, false, {
-                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                            lineNumber: 394,
-                            columnNumber: 13
-                        }, this),
+                        editItems.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "mb-4 border-b pb-3",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "font-medium",
+                                        children: item.food_item
+                                    }, void 0, false, {
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
+                                        lineNumber: 346,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "block text-sm mt-1",
+                                        children: "Quantity (1–3)"
+                                    }, void 0, false, {
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
+                                        lineNumber: 348,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                        type: "number",
+                                        min: 1,
+                                        max: 3,
+                                        value: item.quantity,
+                                        onChange: (e)=>updateItemQuantity(index, Number(e.target.value)),
+                                        className: "border w-full px-3 py-2 rounded"
+                                    }, void 0, false, {
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
+                                        lineNumber: 349,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, item.food_item, true, {
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
+                                lineNumber: 345,
+                                columnNumber: 9
+                            }, this)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex justify-between",
+                            className: "flex justify-between mt-6",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: ()=>setEditingRsvp(null),
-                                    className: "px-4 py-2 bg-gray-300 rounded hover:bg-gray-400",
+                                    className: "px-4 py-2 bg-gray-300 rounded",
                                     children: "Close"
                                 }, void 0, false, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                    lineNumber: 404,
-                                    columnNumber: 15
+                                    lineNumber: 363,
+                                    columnNumber: 9
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: handleEditSubmit,
-                                    className: "px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700",
+                                    className: "px-4 py-2 bg-teal-600 text-white rounded",
                                     children: "Save Changes"
                                 }, void 0, false, {
                                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                                    lineNumber: 411,
-                                    columnNumber: 15
+                                    lineNumber: 370,
+                                    columnNumber: 9
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                            lineNumber: 403,
-                            columnNumber: 13
+                            lineNumber: 362,
+                            columnNumber: 7
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                    lineNumber: 373,
-                    columnNumber: 9
+                    lineNumber: 337,
+                    columnNumber: 5
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                lineNumber: 372,
-                columnNumber: 9
+                lineNumber: 336,
+                columnNumber: 3
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
                 className: "bg-black text-white text-center text-sm py-6 px-4 mt-auto",
@@ -499,33 +470,33 @@ function ProfileReserve() {
                         children: "Boston University Center of Computing & Data Sciences: Duan Family Spark! Initiative"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 423,
+                        lineNumber: 383,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "665 Commonwealth Ave., Boston, MA 02215 | Floor 2, Spark! Space"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 424,
+                        lineNumber: 384,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         children: "buspark@bu.edu"
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                        lineNumber: 425,
+                        lineNumber: 385,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-                lineNumber: 422,
+                lineNumber: 382,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
-        lineNumber: 295,
+        lineNumber: 253,
         columnNumber: 5
     }, this);
 }

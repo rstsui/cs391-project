@@ -21,11 +21,11 @@ var _s = __turbopack_context__.k.signature();
 function CreateEvent() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(76);
-    if ($[0] !== "3a0b916f64d5fffc96c59cdace3ffa88bc4c1ef5af71b9854fdb8b09635d52b9") {
+    if ($[0] !== "b814ec56309ef829415a1a1e4b6a8e8f5fcee093458313c818658dd0e9f65aca") {
         for(let $i = 0; $i < 76; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "3a0b916f64d5fffc96c59cdace3ffa88bc4c1ef5af71b9854fdb8b09635d52b9";
+        $[0] = "b814ec56309ef829415a1a1e4b6a8e8f5fcee093458313c818658dd0e9f65aca";
     }
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [authorized, setAuthorized] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);

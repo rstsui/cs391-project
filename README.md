@@ -15,7 +15,6 @@ Follow these steps if you have just cloned the repository and want to launch the
 
 ### Backend 
 
-
 ### Goals
 - Reduce food waste across BU events and organizations.  
 - Provide a central hub for free food opportunities.  
@@ -29,28 +28,24 @@ Follow these steps if you have just cloned the repository and want to launch the
 ### Step 1 — Navigate into the backend directory
 ```bash
 cd spark-bytes/backend
-````
+```
 
 ### Step 2 — Create & activate a virtual environment
-
 ```bash
 python -m venv venv
 ```
 
 **Windows:**
-
 ```bash
 venv\Scripts\activate
 ```
 
 **macOS/Linux:**
-
 ```bash
 source venv/bin/activate
 ```
 
 ### Step 3 — Install backend dependencies
-
 ```bash
 pip install -r requirements.txt
 ```
@@ -108,31 +103,27 @@ pytest
 ```
 
 This runs all backend test cases, including:
-
-* Authentication tests
-* Events tests
-* RSVP tests
-* Smoke test
-* FakeSupabase-backed integration tests
+- Authentication tests  
+- Events tests  
+- RSVP tests  
+- Smoke test  
+- FakeSupabase-backed integration tests  
 
 ---
 
-# 5. Frontend Setup (Next.js)
+# 5. Frontend Setup (Next.js or React)
 
 ### Step 1 — Navigate to the frontend directory
-
 ```bash
 cd ../frontend
 ```
 
 ### Step 2 — Install dependencies
-
 ```bash
 npm install
 ```
 
 ### Step 3 — Create `.env.local`
-
 Inside `spark-bytes/frontend/`, create:
 
 ```
@@ -145,8 +136,6 @@ Add environment variables:
 NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_KEY=your_anon_key
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key
-NEXT_PUBLIC_GOOGLE_GEOCODE_KEY=your_geocode_key
 ```
 
 ---
@@ -165,27 +154,9 @@ http://localhost:3000
 
 ---
 
-# 7. Running Frontend Tests (Jest)
-
-The frontend uses **Jest** and **React Testing Library**.
-
-### Step 1 — Navigate to the frontend folder
-
-```bash
-cd spark-bytes/frontend
-```
-
-### Step 2 — Run all tests
-
-```bash
-npm run test
-```
----
-
-# 8. Common Issues
+# 7. Common Issues
 
 ### CORS Errors
-
 Make sure the backend allows requests from the frontend:
 
 ```python
@@ -193,47 +164,25 @@ allow_origins=["http://localhost:3000"]
 ```
 
 ### Supabase connection errors
-
 Verify `.env.local` values.
 
 ### JWT Errors
-
 Ensure `JWT_SECRET` is set correctly.
 
 ---
 
-# 9. Docker
+---
+
+# 8. Docker
 
 ### Install Docker
+https://www.docker.com/products/docker-desktop/
 
-[https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+### To build containers: docker compose build
+### To start the full stack: docker compose up
+### To run in the background: docker compose up -d
+### To stop: docker compose down
+### To check running containers: docker ps
 
-### Build containers
 
-```bash
-docker compose build
-```
-
-### Start the full stack
-
-```bash
-docker compose up
-```
-
-### Run in background
-
-```bash
-docker compose up -d
-```
-
-### Stop
-
-```bash
-docker compose down
-```
-
-### Check running containers
-
-```bash
-docker ps
-```
+---

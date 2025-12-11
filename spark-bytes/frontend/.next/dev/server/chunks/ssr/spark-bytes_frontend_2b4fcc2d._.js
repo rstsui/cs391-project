@@ -1,5 +1,5 @@
 module.exports = [
-"[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
 __turbopack_context__.s([
@@ -32,7 +32,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2
 const EventMap = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$shared$2f$lib$2f$app$2d$dynamic$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"])(async ()=>{}, {
     loadableGenerated: {
         modules: [
-            "[project]/spark-bytes/frontend/src/app/events/[id]/map_component.tsx [app-client] (ecmascript, next/dynamic entry)"
+            null
         ]
     },
     ssr: false
@@ -162,7 +162,7 @@ function EventInfoPage() {
         className: "p-10 text-center",
         children: "Loading event..."
     }, void 0, false, {
-        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
         lineNumber: 207,
         columnNumber: 12
     }, this);
@@ -182,7 +182,7 @@ function EventInfoPage() {
                                 className: "text-3xl font-semibold mb-3",
                                 children: event.title
                             }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                 lineNumber: 219,
                                 columnNumber: 13
                             }, this),
@@ -190,7 +190,7 @@ function EventInfoPage() {
                                 className: "text-gray-700 mb-6",
                                 children: event.description
                             }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                 lineNumber: 221,
                                 columnNumber: 13
                             }, this),
@@ -202,7 +202,7 @@ function EventInfoPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                 children: "Location:"
                                             }, void 0, false, {
-                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                 lineNumber: 224,
                                                 columnNumber: 18
                                             }, this),
@@ -210,7 +210,7 @@ function EventInfoPage() {
                                             event.location
                                         ]
                                     }, void 0, true, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 224,
                                         columnNumber: 15
                                     }, this),
@@ -219,7 +219,7 @@ function EventInfoPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                 children: "Date:"
                                             }, void 0, false, {
-                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                 lineNumber: 225,
                                                 columnNumber: 18
                                             }, this),
@@ -227,7 +227,7 @@ function EventInfoPage() {
                                             event.event_date
                                         ]
                                     }, void 0, true, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 225,
                                         columnNumber: 15
                                     }, this),
@@ -236,7 +236,7 @@ function EventInfoPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                 children: "Time:"
                                             }, void 0, false, {
-                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                 lineNumber: 226,
                                                 columnNumber: 18
                                             }, this),
@@ -244,7 +244,7 @@ function EventInfoPage() {
                                             formatTime(event.event_time)
                                         ]
                                     }, void 0, true, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 226,
                                         columnNumber: 15
                                     }, this),
@@ -253,7 +253,7 @@ function EventInfoPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                 children: "Created by:"
                                             }, void 0, false, {
-                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                 lineNumber: 227,
                                                 columnNumber: 18
                                             }, this),
@@ -261,7 +261,7 @@ function EventInfoPage() {
                                             event.organizer_email
                                         ]
                                     }, void 0, true, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 227,
                                         columnNumber: 15
                                     }, this),
@@ -269,12 +269,12 @@ function EventInfoPage() {
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                             children: "Available Food:"
                                         }, void 0, false, {
-                                            fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                             lineNumber: 229,
                                             columnNumber: 18
                                         }, this)
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 229,
                                         columnNumber: 15
                                     }, this),
@@ -288,12 +288,12 @@ function EventInfoPage() {
                                                     " available"
                                                 ]
                                             }, i, true, {
-                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                 lineNumber: 232,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 230,
                                         columnNumber: 15
                                     }, this),
@@ -302,7 +302,7 @@ function EventInfoPage() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                                 children: "Capacity:"
                                             }, void 0, false, {
-                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                 lineNumber: 236,
                                                 columnNumber: 18
                                             }, this),
@@ -312,13 +312,13 @@ function EventInfoPage() {
                                             event.capacity
                                         ]
                                     }, void 0, true, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 236,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                 lineNumber: 223,
                                 columnNumber: 13
                             }, this),
@@ -327,18 +327,18 @@ function EventInfoPage() {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(EventMap, {
                                     location: event.location
                                 }, void 0, false, {
-                                    fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                     lineNumber: 240,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                 lineNumber: 239,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                         lineNumber: 218,
                         columnNumber: 11
                     }, this),
@@ -353,7 +353,7 @@ function EventInfoPage() {
                                         className: "text-xl font-semibold mb-4",
                                         children: "Log in to reserve food"
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 250,
                                         columnNumber: 19
                                     }, this),
@@ -362,13 +362,13 @@ function EventInfoPage() {
                                         className: "bg-white text-teal-700 font-semibold px-4 py-2 rounded-md",
                                         children: "Log In"
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 251,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                 lineNumber: 249,
                                 columnNumber: 17
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -379,7 +379,7 @@ function EventInfoPage() {
                                         className: "text-xl font-semibold text-center mb-4",
                                         children: "Reserve Food"
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 260,
                                         columnNumber: 19
                                     }, this),
@@ -391,7 +391,7 @@ function EventInfoPage() {
                                         value: name,
                                         onChange: (e)=>setName(e.target.value)
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 262,
                                         columnNumber: 19
                                     }, this),
@@ -403,7 +403,7 @@ function EventInfoPage() {
                                         value: email,
                                         onChange: (e)=>setEmail(e.target.value)
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 271,
                                         columnNumber: 19
                                     }, this),
@@ -420,7 +420,7 @@ function EventInfoPage() {
                                                             value: "",
                                                             children: "Select item"
                                                         }, void 0, false, {
-                                                            fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                             lineNumber: 289,
                                                             columnNumber: 25
                                                         }, this),
@@ -433,13 +433,13 @@ function EventInfoPage() {
                                                                     " left)"
                                                                 ]
                                                             }, item.name, true, {
-                                                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                                 lineNumber: 291,
                                                                 columnNumber: 27
                                                             }, this))
                                                     ]
                                                 }, void 0, true, {
-                                                    fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                     lineNumber: 283,
                                                     columnNumber: 23
                                                 }, this),
@@ -451,7 +451,7 @@ function EventInfoPage() {
                                                     value: row.quantity,
                                                     onChange: (e)=>updateQuantity(index, Number(e.target.value))
                                                 }, void 0, false, {
-                                                    fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                     lineNumber: 297,
                                                     columnNumber: 23
                                                 }, this),
@@ -461,13 +461,13 @@ function EventInfoPage() {
                                                     onClick: ()=>removeItem(index),
                                                     children: "✕"
                                                 }, void 0, false, {
-                                                    fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                                    fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                                     lineNumber: 307,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, index, true, {
-                                            fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                             lineNumber: 282,
                                             columnNumber: 21
                                         }, this)),
@@ -477,7 +477,7 @@ function EventInfoPage() {
                                         onClick: addItemRow,
                                         children: "+ Add another item"
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 320,
                                         columnNumber: 21
                                     }, this),
@@ -486,39 +486,39 @@ function EventInfoPage() {
                                         className: "bg-white text-teal-700 font-semibold py-2 rounded-md mt-4",
                                         children: "Reserve"
                                     }, void 0, false, {
-                                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                         lineNumber: 329,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
-                                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                                 lineNumber: 259,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
-                            fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                             lineNumber: 246,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
-                        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                         lineNumber: 245,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
-                fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+                fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
                 lineNumber: 215,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
-            fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+            fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
             lineNumber: 214,
             columnNumber: 7
         }, this)
     }, void 0, false, {
-        fileName: "[project]/spark-bytes/frontend/src/app/events/[id]/page.tsx",
+        fileName: "[project]/spark-bytes/frontend/src/app/profile_reserve/page.tsx",
         lineNumber: 213,
         columnNumber: 5
     }, this);
@@ -765,4 +765,4 @@ if ((typeof exports.default === 'function' || typeof exports.default === 'object
 }),
 ];
 
-//# sourceMappingURL=spark-bytes_frontend_3282baf8._.js.map
+//# sourceMappingURL=spark-bytes_frontend_2b4fcc2d._.js.map

@@ -21,11 +21,11 @@ var _s = __turbopack_context__.k.signature();
 function AdminEventsPage() {
     _s();
     const $ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$compiler$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["c"])(49);
-    if ($[0] !== "020454ac38df09a44eb42cd03af73cdf57b455a42ad2e11d89ae0ab49496ccc6") {
+    if ($[0] !== "e976c727ddb33c925ba2a7db8d3bcaa732fc1b1e90ef8a5ea7c780a23fdbb47d") {
         for(let $i = 0; $i < 49; $i += 1){
             $[$i] = Symbol.for("react.memo_cache_sentinel");
         }
-        $[0] = "020454ac38df09a44eb42cd03af73cdf57b455a42ad2e11d89ae0ab49496ccc6";
+        $[0] = "e976c727ddb33c925ba2a7db8d3bcaa732fc1b1e90ef8a5ea7c780a23fdbb47d";
     }
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [authorized, setAuthorized] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -929,6 +929,24 @@ function _AdminEventsPageEventsMapAnonymous2(r_2) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "bg-gray-50 p-3 rounded",
         children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                className: "text-sm",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                        children: "Email:"
+                    }, void 0, false, {
+                        fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
+                        lineNumber: 476,
+                        columnNumber: 86
+                    }, this),
+                    " ",
+                    r_2.email
+                ]
+            }, void 0, true, {
+                fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
+                lineNumber: 476,
+                columnNumber: 63
+            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mt-2",
                 children: [
@@ -937,7 +955,7 @@ function _AdminEventsPageEventsMapAnonymous2(r_2) {
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
                         lineNumber: 476,
-                        columnNumber: 85
+                        columnNumber: 147
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
                         className: "ml-4 list-disc",
@@ -945,13 +963,13 @@ function _AdminEventsPageEventsMapAnonymous2(r_2) {
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
                         lineNumber: 476,
-                        columnNumber: 108
+                        columnNumber: 170
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
                 lineNumber: 476,
-                columnNumber: 63
+                columnNumber: 125
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$spark$2d$bytes$2f$frontend$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                 className: "text-sm",
@@ -961,7 +979,7 @@ function _AdminEventsPageEventsMapAnonymous2(r_2) {
                     }, void 0, false, {
                         fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
                         lineNumber: 476,
-                        columnNumber: 239
+                        columnNumber: 301
                     }, this),
                     " ",
                     r_2.quantity
@@ -969,7 +987,7 @@ function _AdminEventsPageEventsMapAnonymous2(r_2) {
             }, void 0, true, {
                 fileName: "[project]/spark-bytes/frontend/src/app/admin/events/page.tsx",
                 lineNumber: 476,
-                columnNumber: 216
+                columnNumber: 278
             }, this)
         ]
     }, r_2.id, true, {
