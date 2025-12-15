@@ -2,8 +2,26 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function HomePage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+useEffect(() => {
+  supabase.auth.getSession().then(({ data }) => {
+    setIsLoggedIn(!!data.session);
+  });
+
+  const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    setIsLoggedIn(!!session);
+  });
+
+  return () => {
+    sub.subscription.unsubscribe();
+  };
+}, []);
+
   return (
     <div className="min-h-screen flex flex-col">
 
@@ -68,6 +86,7 @@ export default function HomePage() {
         </div>
       </section>
 
+    {!isLoggedIn && (
       <section className="bg-teal-600 text-white text-center py-16 px-6 mt-10">
         <h2 className="text-3xl font-semibold mb-4">Make BU More Sustainable</h2>
         <p className="text-lg opacity-90 mb-6 max-w-xl mx-auto">
@@ -80,6 +99,7 @@ export default function HomePage() {
           </button>
         </Link>
       </section>
+    )}
 
       {/* FOOTER */}
       <footer className="bg-black text-white text-center text-sm py-10 mt-12">
