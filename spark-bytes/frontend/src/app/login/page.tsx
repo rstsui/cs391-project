@@ -26,10 +26,11 @@ export default function LoginPage() {
 
   // Google login
   const signInWithGoogle = async () => {
+    const redirectUrl = `${window.location.origin}/profile_reserve`;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000/profile_reserve",
+        redirectTo: redirectUrl,
       },
     });
 
